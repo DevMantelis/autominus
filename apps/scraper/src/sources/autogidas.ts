@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
 import { getNumberContent, getTextContent, logger } from "../helpers";
 import {
+  PlaywrightCookie,
   listingStatus,
   type ListingPageResult,
   type ScraperSource,
@@ -18,6 +19,38 @@ const AUTOGIDAS_QUERY: Record<string, string> = {
   f_60: "6315",
   s: "1922084038",
 };
+
+const AUTOGIDAS_COOKIES: PlaywrightCookie[] = [
+  {
+    domain: ".autogidas.lt",
+    path: "/",
+    name: "OptanonAlertBoxClosed",
+    value: "2025-10-31T14:21:36.236Z",
+    httpOnly: false,
+    secure: true,
+    session: false,
+  },
+  {
+    domain: ".autogidas.lt",
+    path: "/",
+    name: "OptanonConsent",
+    value:
+      "isGpcEnabled=1&datestamp=Fri+Oct+31+2025+16%3A21%3A36+GMT%2B0200+(Eastern+European+Standard+Time)&version=202410.1.0&browserGpcFlag=1&isIABGlobal=false&hosts=&consentId=7202f991-9dce-46df-8373-c0ca69d344c0&interactionCount=1&isAnonUser=1&landingPath=NotLandingPage&groups=C0003%3A0%2CC0001%3A1%2CC0004%3A0%2CC0002%3A0%2CV2STACK42%3A0&intType=6",
+    httpOnly: false,
+    secure: true,
+    session: false,
+  },
+  {
+    domain: ".autogidas.lt",
+    path: "/",
+    name: "eupubconsent-v2",
+    value:
+      "CQaJr7AQaJr7AAcABBLTCCFgAAAAAEPgAChQLstR_G__bWlr-bb3aftkeYxP9_hr7sQxBgbJk24FzLvW7JwXx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgKIgVryDMaEyUoTNKJ6BkiFMRI2NYCFxvm4tjWQCY5vr99lc1mB-N7dr82dzyy6hHn3a5_2S1WJCdIYetDfv8ZBKT-9IEd_x8v4v4_F7pE2-eS1n_pGvp6j9-YnM_dBmxt-bSffzPn__rl_e7X_vd_n37v94XH77v____f_-7___2C7AAJhoVEEZZECAQKBhBAgAUFYQAUCAIAAEgaICAEwYFOQMAF1hMgBACgAGCAEAAIMAAQAACQAIRABQAQCAACAQKAAMACAICABgYAAwAWIgEAAIDoGKYEEAgWACRmVQaYEoACQQEtlQgkAwIK4QhFngEECImCgAABAAKAgAAeCwEJJASsSCALiCaAAAgAACiBAgRSFmAIKgzRaC8CTqMjTAMHzBMkp0GQBMEZGSbEJvwmHikKIUEOQGxSzAHAAAA.YAAACHwAAAAA",
+    httpOnly: false,
+    secure: true,
+    session: false,
+  },
+];
 
 const paramsDescription = {
   technical_inspection: "TA iki",
@@ -304,7 +337,7 @@ export const autogidasSource: ScraperSource = {
   name: "autogidas",
   host: new URL(AUTOGIDAS_BASE_URL).hostname,
   seeds: [buildSeedUrl()],
-  // cookies: AUTOGIDAS_COOKIES.map((cookie) => ({ ...cookie })),
+  cookies: AUTOGIDAS_COOKIES.map((cookie) => ({ ...cookie })),
   parseListingPage,
   resolveListingUrl: (listing) => listing.url,
   scrapeDetails,
