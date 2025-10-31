@@ -3,7 +3,7 @@
   "build": {
     "builder": "DOCKERFILE",
     "path": "apps/alpr",
-    "dockerfilePath": "apps/alpr/Dockerfile"
+    "dockerfilePath": "Dockerfile"
   },
   "deploy": {
     "numReplicas": 1,
