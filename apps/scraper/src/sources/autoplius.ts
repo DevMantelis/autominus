@@ -32,6 +32,15 @@ const AUTOPLIUS_COOKIES: PlaywrightCookie[] = [
     secure: false,
     session: false,
   },
+  {
+    domain: ".autoplius.lt",
+    path: "/",
+    name: "banners_139",
+    value: "eNqzNjc1M9UxNDczMjAwMzQ00dEBACLvA5M=",
+    httpOnly: false,
+    secure: true,
+    session: true,
+  },
 ];
 
 const AUTOPLIUS_QUERY: Record<string, string> = {

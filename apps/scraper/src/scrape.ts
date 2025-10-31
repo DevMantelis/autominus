@@ -254,7 +254,7 @@ main().catch(async (error) => {
     {
       error: errorMessage,
     },
-    "Failed in the regitra queue."
+    "Failed in main."
   );
   await fetch(env.DISCORD_WEBHOOK_ERRORS, {
     method: "POST",
@@ -262,14 +262,7 @@ main().catch(async (error) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      content: `Failed in the regitra queue:\n ${errorMessage}`,
+      content: `Failed in main:\n ${errorMessage}`,
     }),
   });
-
-  logger.error(
-    {
-      error: errorMessage,
-    },
-    "Error from main function."
-  );
 });
