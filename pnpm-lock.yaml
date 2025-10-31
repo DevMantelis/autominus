@@ -18,6 +18,8 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  apps/alpr: {}
+
   apps/scraper:
     dependencies:
       '@ghostery/adblocker-playwright':

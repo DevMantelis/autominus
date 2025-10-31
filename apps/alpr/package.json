@@ -1,0 +1,12 @@
+{
+  "name": "alpr",
+  "private": true,
+  "scripts": {
+    "setup": "python manage.py setup",
+    "dev": "python manage.py dev",
+    "start": "python manage.py start",
+    "build": "python manage.py build",
+    "lint": "python manage.py lint",
+    "check-types": "python manage.py check-types"
+  }
+}
