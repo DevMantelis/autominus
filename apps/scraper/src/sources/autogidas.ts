@@ -1,13 +1,13 @@
-import type { Locator, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { getNumberContent, getTextContent, logger } from "../helpers";
 import {
   listingStatus,
-  type AutoInput,
   type ListingPageResult,
   type ScraperSource,
   type initialListingT,
 } from "../types";
-import { getPlates } from "../get_plates";
+import { insertAutoValidator } from "@repo/convex-db/convex/types";
+import { getVinFromRegitra } from ".";
 
 const log = logger.child({ source: "autogidas" });
 
@@ -15,32 +15,9 @@ const AUTOGIDAS_BASE_URL = "https://autogidas.lt/skelbimai/automobiliai/";
 const AUTOGIDAS_LISTING_URL = "https://autogidas.lt/skelbimas";
 const AUTOGIDAS_QUERY: Record<string, string> = {
   f_216: "2000",
-  f_60: "729",
+  f_60: "6315",
+  s: "1922084038",
 };
-
-const AUTOGIDAS_COOKIES = [
-  {
-    domain: ".autogidas.lt",
-    path: "/",
-    name: "identifier_user",
-    value: "25413d890f9d3834cbc362e835fff4aa",
-    httpOnly: true,
-  },
-  {
-    domain: ".autogidas.lt",
-    path: "/",
-    name: "ag_remember_token",
-    value: "Bmt6E3i29QpCy8RWRVHTh5EoFisgKJ1KwiVkxM0GwF70GVuTUP46ubxK8ADo",
-    httpOnly: true,
-  },
-  {
-    domain: ".autogidas.lt",
-    path: "/",
-    name: "PHPSESSID",
-    value: "7b7c800a5d7c1d40b67159339d38ab66",
-    session: true,
-  },
-] as const;
 
 const paramsDescription = {
   technical_inspection: "TA iki",
@@ -95,7 +72,9 @@ async function parseListingPage(
   currentUrl: string
 ): Promise<ListingPageResult> {
   const listings = await page.locator(listingLocators.listings).all();
-  log.info({ currentUrl, count: listings.length }, "Found listings");
+  log.info({ currentUrl, count: listings.length }, "Found potential listings");
+  if (listings.length === 0)
+    throw new Error("Failed to scrape listings, got 0.");
 
   const items: ListingPageResult["listings"] = [];
   for (const listing of listings) {
@@ -149,18 +128,13 @@ async function parseListingPage(
 async function scrapeDetails(
   page: Page,
   listing: initialListingT
-): Promise<AutoInput[number] | null> {
+): Promise<insertAutoValidator | null> {
   log.info({ url: listing.url }, "Scraping listing");
-
-  await page.goto(listing.url, { waitUntil: "domcontentloaded" });
 
   const description = await getTextContent(page, detailLocators.description);
   const number = await getTextContent(page, detailLocators.number);
   const mileage = await getTextContent(page, detailLocators.mileage);
-  const first_registration_year = await getTextContent(
-    page,
-    detailLocators.first_registration_year
-  );
+  const registration = await getRegistrationYearAndMonth(page);
   const fuel_type = await getTextContent(page, detailLocators.fuel_type);
   const gearbox = await getTextContent(page, detailLocators.gearbox);
   const engine = await getTextContent(page, detailLocators.engine);
@@ -168,23 +142,23 @@ async function scrapeDetails(
     (await getTextContent(page, detailLocators.location_listing)) ||
     (await getTextContent(page, detailLocators.location_user));
 
-  const auto: AutoInput[number]["auto"] = {
-    id: listing.id,
-    url: listing.url,
-    source: "autogidas",
-    price: listing.price,
-    description,
-    title: listing.title,
-    status: listing.status,
-    initial: false,
-    mileage,
-    first_registration_year,
-    fuel_type,
-    gearbox,
-    engine,
-    number,
-    location,
-  };
+  const autoParams: Pick<
+    insertAutoValidator,
+    | "technical_inspection_year"
+    | "technical_inspection_month"
+    | "drive_wheels"
+    | "defects"
+    | "body_type"
+    | "color"
+    | "doors"
+    | "gearbox"
+    | "seats"
+    | "sdk"
+    | "euro_standard"
+    | "first_registration_year_country"
+    | "wheel_diameter"
+    | "co2_emission"
+  > = {};
 
   const params = await page.locator(detailLocators.params).all();
   for (const param of params) {
@@ -193,49 +167,60 @@ async function scrapeDetails(
     if (!key || !value) continue;
 
     switch (key) {
-      case paramsDescription.technical_inspection:
-        auto.technical_inspection = value;
+      case paramsDescription.technical_inspection: {
+        const splitted = value.split("-");
+        if (
+          !isFinite(Number(splitted.at(0))) ||
+          Number(splitted.at(0)).toString().length !== 4
+        )
+          break;
+        autoParams.technical_inspection_year = Number(splitted.at(0));
+        autoParams.technical_inspection_month = isFinite(Number(splitted.at(1)))
+          ? Number(splitted.at(1))
+          : 1;
+
         break;
+      }
       case paramsDescription.drive_wheels:
-        auto.drive_wheels = value;
+        autoParams.drive_wheels = value;
         break;
       case paramsDescription.defects:
-        auto.defects = value;
+        autoParams.defects = value;
         break;
       case paramsDescription.body_type:
-        auto.body_type = value;
+        autoParams.body_type = value;
         break;
       case paramsDescription.color:
-        auto.color = value;
+        autoParams.color = value;
         break;
       case paramsDescription.doors:
-        auto.doors = value;
+        autoParams.doors = value;
         break;
       case paramsDescription.gearbox:
-        auto.gearbox = value;
+        autoParams.gearbox = value;
         break;
       case paramsDescription.seats:
-        auto.seats = value;
+        autoParams.seats = value;
         break;
       case paramsDescription.sdk:
         if (value.length === 8 && !value.toLowerCase().includes("kodas")) {
-          auto.sdk = value;
+          autoParams.sdk = value;
         }
         break;
-      case paramsDescription.vin:
-        // auto.vin = await getVin(param);
-        break;
+      // case paramsDescription.vin:
+      // auto.vin = await getVin(param);
+      // break;
       case paramsDescription.euro_standard:
-        auto.euro_standard = value;
+        autoParams.euro_standard = value;
         break;
       case paramsDescription.first_registration_year_country:
-        auto.first_registration_year_country = value;
+        autoParams.first_registration_year_country = value;
         break;
       case paramsDescription.wheel_diameter:
-        auto.wheel_diameter = value;
+        autoParams.wheel_diameter = value;
         break;
       case paramsDescription.co2_emission:
-        auto.co2_emission = value;
+        autoParams.co2_emission = value;
         break;
       default:
         log.debug({ key }, "Unknown parameter");
@@ -262,29 +247,64 @@ async function scrapeDetails(
     }
   }
 
-  // log.info({ images: images.length }, "Listing processed");
+  let vin: string | undefined;
+  if (autoParams.sdk) vin = await getVinFromRegitra(page, autoParams.sdk, 0);
 
-  const plates = await getPlates(images);
-  auto.plates = plates;
-
-  return {
-    auto,
+  const auto: insertAutoValidator = {
+    id: listing.id,
+    url: listing.url,
+    source: "autogidas",
+    price: listing.price,
+    description,
+    title: listing.title,
+    status: listing.status,
+    mileage,
+    first_registration_year: registration?.first_registration_year,
+    first_registration_month: registration?.first_registration_month,
+    fuel_type,
+    gearbox,
+    engine,
+    number,
+    location,
+    plates: [],
     images,
+    vin,
+    needs_regitra_lookup: false,
+    ...autoParams,
   };
+
+  log.info(
+    { url: listing.url, images: images.length, sdk: auto.sdk, vin: auto.vin },
+    "Listing processed"
+  );
+
+  return auto;
 }
 
-async function getVin(locator: Locator) {
-  // Vin reveal flow currently disabled due to frequent blocks.
-  // Placeholder for future improvements.
-  // void locator;
-  return undefined;
+async function getRegistrationYearAndMonth(page: Page) {
+  const value = await getTextContent(
+    page,
+    detailLocators.first_registration_year
+  );
+  if (!value) return;
+  const splitted = value.split("-");
+  if (
+    !isFinite(Number(splitted.at(0))) ||
+    Number(splitted.at(0)).toString().length !== 4
+  )
+    return;
+  const first_registration_year = Number(splitted.at(0));
+  const first_registration_month = isFinite(Number(splitted.at(1)))
+    ? Number(splitted.at(1))
+    : 1;
+  return { first_registration_year, first_registration_month };
 }
 
 export const autogidasSource: ScraperSource = {
   name: "autogidas",
   host: new URL(AUTOGIDAS_BASE_URL).hostname,
   seeds: [buildSeedUrl()],
-  cookies: AUTOGIDAS_COOKIES.map((cookie) => ({ ...cookie })),
+  // cookies: AUTOGIDAS_COOKIES.map((cookie) => ({ ...cookie })),
   parseListingPage,
   resolveListingUrl: (listing) => listing.url,
   scrapeDetails,

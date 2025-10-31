@@ -17,12 +17,10 @@ export async function getNumberContent(locator: Locator | Page, path: string) {
 
 export function normalizeText(raw?: string | null): string | undefined {
   if (!raw) return undefined;
-  return (
-    raw
-      .replace(/\u00A0/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-  );
+  return raw
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export function normalizeNumbers(raw?: string | null): number | undefined {
@@ -45,3 +43,7 @@ export const logger = pino({
     },
   },
 });
+
+export async function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

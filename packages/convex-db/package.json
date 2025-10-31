@@ -2,15 +2,21 @@
   "name": "@repo/convex-db",
   "version": "0.0.0",
   "private": true,
-  "export": {
-    "generated": "convex/_generated"
-  },
+  "files": [
+    "convex/"
+  ],
   "scripts": {
     "dev": "convex dev"
   },
   "type": "module",
   "dependencies": {
+    "@t3-oss/env-core": "^0.13.8",
     "convex": "^1.28.0",
-    "dotenv": "^17.2.3"
+    "convex-helpers": "^0.1.104",
+    "dotenv": "^17.2.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2"
   }
 }

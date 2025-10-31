@@ -1,9 +1,5 @@
 import type { Page } from "@playwright/test";
-import type {
-  insertAutoArgs,
-  updateAutoArgs,
-} from "@repo/convex-db/convex/autos";
-import type { Infer } from "convex/values";
+import type { insertAutoValidator } from "@repo/convex-db/convex/types";
 
 export type initialListingT = {
   url: string;
@@ -19,9 +15,6 @@ export const listingStatus = {
   reserved: "reserved",
   sold: "sold",
 } as const;
-
-export type AutoInput = Infer<typeof insertAutoArgs>;
-export type UpdateAutoInput = Infer<typeof updateAutoArgs>;
 
 export type PlaywrightCookie = {
   domain: string;
@@ -53,7 +46,7 @@ export interface ScraperSource {
   scrapeDetails: (
     page: Page,
     listing: initialListingT
-  ) => Promise<AutoInput[number] | null>;
+  ) => Promise<insertAutoValidator | null>;
   getVinFromExternalPage?: (
     page: Page,
     url: string
@@ -67,7 +60,7 @@ export type Listing = {
 
 export type Detail = {
   type: "detail";
-  result: AutoInput[number] | null;
+  result: insertAutoValidator | null;
 };
 
 export type QueueTask = Listing | Detail;

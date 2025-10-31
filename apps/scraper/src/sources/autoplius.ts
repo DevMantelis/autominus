@@ -8,12 +8,12 @@ import {
 } from "../helpers";
 import {
   listingStatus,
-  type AutoInput,
   type ListingPageResult,
   type ScraperSource,
   type initialListingT,
 } from "../types";
-import { getPlates } from "../get_plates";
+import { insertAutoValidator } from "@repo/convex-db/convex/types";
+import { getVinFromRegitra } from ".";
 
 const log = logger.child({ source: "autoplius" });
 
@@ -22,93 +22,12 @@ const AUTOPLIUS_BASE_URL =
 
 const AUTOPLIUS_QUERY: Record<string, string> = {
   category_id: "2",
-  older_not: "1",
+  older_not: "-1",
   sell_price_to: "2000",
-  slist: "2696778400",
+  slist: "2717947406",
   order_by: "3",
   order_direction: "DESC",
 };
-
-const AUTOPLIUS_COOKIES = [
-  {
-    domain: ".autoplius.lt",
-    path: "/",
-    name: "FCCDCF",
-    value:
-      "%5Bnull%2Cnull%2Cnull%2C%5B%22CQXRZAAQXRZAAEsACBLTB7FgAAAAAEPgABaYAAAUBQD-F2Y2EKFEXCuQUYIYBCugCAAxYhgAA0CBgAAGCQgQAgFJIIkCAEAIEAAEAAAQEgCAABQEBAAAIAAAAAqAACIABgAQCAQQIABAAAAhIAAAAAAEQAAIgEAAAAIIIgBABAAAAQAkDAAAAAAAAECAAAAACAAAAAAAAAAAAAAAEABgIABAAABEAAAAAAAACCQIAAAAAAAAAAAAAAAAAAAAAAEAAA.YAAACFgAAAA%22%2C%222~~dv.61.89.122.184.196.230.314.442.445.494.550.576.827.1029.1033.1046.1047.1051.1097.1126.1166.1301.1342.1415.1725.1765.1942.1958.1987.2068.2072.2074.2107.2213.2219.2223.2224.2328.2331.2387.2416.2501.2567.2568.2575.2657.2686.2778.2869.2878.2908.2920.2963.3005.3023.3100.3126.3219.3234.3235.3253.3309.3731.6931.8931.13731.15731%22%2C%22BBCCBC33-F606-48DF-B3C9-756434BAC3E7%22%5D%5D",
-  },
-  {
-    domain: ".autoplius.lt",
-    path: "/",
-    name: "receive-cookie-deprecation",
-    value: "1",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: true,
-    name: "__cf_bm",
-    path: "/",
-    secure: true,
-    value:
-      "1FZ4eJm6zGEFq2vDBlslakYYnn7OJerMB59ZsKFMrwQ-1757065171-1.0.1.1-NeNiTmBrqaYV_w3a_9CKJ9JmrUorH5_zweUSnQM_gT7TLlIN4j4j.XcYPTUOoI2ds6OuDq0xb66Mb1t_8xkxsFNOrCNC.J.NMLW3oKGSTyk",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: true,
-    name: "ap_messenger_push",
-    path: "/",
-    secure: true,
-    value: "1",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: true,
-    name: "visitor_segment",
-    path: "/",
-    secure: true,
-    value: "117",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: true,
-    name: "ap_remember_me",
-    path: "/",
-    secure: true,
-    value: "0de03c0f784af4dff40d0358a6fadc74",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: false,
-    name: "banners_139",
-    path: "/",
-    secure: true,
-    value: "eNqzNjc1M9UxNDc1NzQwNTQw0tEBACMKA5Q=",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: true,
-    name: "PHPSESSID",
-    path: "/",
-    secure: true,
-    value: "14eeb7rkskv8fgt4mqclv4b1r2",
-  },
-  {
-    domain: "autoplius.lt",
-    httpOnly: false,
-    name: "wide-window",
-    path: "/",
-    secure: false,
-    value: "0",
-  },
-  {
-    domain: ".autoplius.lt",
-    httpOnly: false,
-    name: "z",
-    path: "/",
-    secure: true,
-    value: "175701838368b9f90f80c63",
-  },
-] as const;
 
 const listingLocators = {
   listings: ".auto-lists > .announcement-item",
@@ -133,8 +52,8 @@ const detailLocators = {
   media_gallery_thumbnails: "div.media-gallery-thumbnails > .thumbnail",
   media_gallery_items_container:
     "div.media-gallery-items-container > div.photo-container > .photo > img",
-  vin: "div.vin-parameter.js-show-vin",
-  vin_revealed: "div.vin-parameter.js-show-vin.revealed",
+  // vin: "div.vin-parameter.js-show-vin",
+  // vin_revealed: "div.vin-parameter.js-show-vin.revealed",
   vin_autoistorija: "a[href*='autoistorija.lt/summary']",
 } as const;
 
@@ -188,7 +107,9 @@ async function parseListingPage(
   currentUrl: string
 ): Promise<ListingPageResult> {
   const listings = await page.locator(listingLocators.listings).all();
-  log.info({ currentUrl, count: listings.length }, "Found listings");
+  log.info({ currentUrl, count: listings.length }, "Found potential listings");
+  if (listings.length === 0)
+    throw new Error("Failed to scrape listings, got 0.");
 
   const items: ListingPageResult["listings"] = [];
   for (const listing of listings) {
@@ -263,30 +184,38 @@ async function parseListingPage(
 async function scrapeDetails(
   page: Page,
   listing: initialListingT
-): Promise<AutoInput[number] | null> {
+): Promise<insertAutoValidator | null> {
   log.info({ url: listing.url }, "Scraping listing");
-
-  await page.goto(listing.url, {
-    waitUntil: "domcontentloaded",
-  });
 
   const description = await getTextContent(page, detailLocators.description);
   const number = await getTextContent(page, detailLocators.number);
   const location = await getTextContent(page, detailLocators.location);
 
-  const auto: AutoInput[number]["auto"] = {
-    id: listing.id,
-    url: listing.url,
-    source: "autoplius",
-    price: listing.price,
-    price_old: listing.price_old,
-    description,
-    title: listing.title,
-    status: listing.status,
-    initial: false,
-    number,
-    location,
-  };
+  const autoParams: Pick<
+    insertAutoValidator,
+    | "first_registration_year"
+    | "first_registration_month"
+    | "mileage"
+    | "engine"
+    | "drive_wheels"
+    | "fuel_type"
+    | "body_type"
+    | "doors"
+    | "gearbox"
+    | "color"
+    | "mass"
+    | "seats"
+    | "defects"
+    | "technical_inspection_year"
+    | "technical_inspection_month"
+    | "co2_emission"
+    | "emission_tax"
+    | "sdk"
+    | "euro_standard"
+    | "first_registration_year_country"
+    | "wheel_diameter"
+    | "climate_control"
+  > = {};
 
   const params = await page.locator(detailLocators.params).all();
   let findVin: string | undefined = undefined;
@@ -296,69 +225,90 @@ async function scrapeDetails(
     if (!key || !value) continue;
 
     switch (key) {
-      case paramsDescription.first_registration_year:
-        auto.first_registration_year = value;
+      case paramsDescription.first_registration_year: {
+        const splitted = value.split("-");
+        if (
+          !isFinite(Number(splitted.at(0))) ||
+          Number(splitted.at(0)).toString().length !== 4
+        )
+          break;
+        autoParams.first_registration_year = Number(splitted.at(0));
+        autoParams.first_registration_month = isFinite(Number(splitted.at(1)))
+          ? Number(splitted.at(1))
+          : 1;
+
         break;
+      }
       case paramsDescription.mileage:
-        auto.mileage = value;
+        autoParams.mileage = value;
         break;
       case paramsDescription.engine:
-        auto.engine = value;
+        autoParams.engine = value;
         break;
       case paramsDescription.drive_wheels:
-        auto.drive_wheels = value;
+        autoParams.drive_wheels = value;
         break;
       case paramsDescription.fuel_type:
-        auto.fuel_type = value;
+        autoParams.fuel_type = value;
         break;
       case paramsDescription.body_type:
-        auto.body_type = value;
+        autoParams.body_type = value;
         break;
       case paramsDescription.doors:
-        auto.doors = value;
+        autoParams.doors = value;
         break;
       case paramsDescription.gearbox:
-        auto.gearbox = value;
+        autoParams.gearbox = value;
         break;
       case paramsDescription.color:
-        auto.color = value;
+        autoParams.color = value;
         break;
       case paramsDescription.mass:
-        auto.mass = value;
+        autoParams.mass = value;
         break;
       case paramsDescription.seats:
-        auto.seats = value;
+        autoParams.seats = value;
         break;
       case paramsDescription.defects:
-        auto.defects = value;
+        autoParams.defects = value;
         break;
-      case paramsDescription.technical_inspection:
-        auto.technical_inspection = value;
+      case paramsDescription.technical_inspection: {
+        const splitted = value.split("-");
+        if (
+          !isFinite(Number(splitted.at(0))) ||
+          Number(splitted.at(0)).toString().length !== 4
+        )
+          break;
+        autoParams.technical_inspection_year = Number(splitted.at(0));
+        autoParams.technical_inspection_month = isFinite(Number(splitted.at(1)))
+          ? Number(splitted.at(1))
+          : 1;
+
         break;
+      }
       case paramsDescription.co2_emission:
-        auto.co2_emission = value;
+        autoParams.co2_emission = value;
         break;
       case paramsDescription.emission_tax:
-        auto.emission_tax = normalizeNumbers(value);
+        autoParams.emission_tax = normalizeNumbers(value);
         break;
       case paramsDescription.vin:
         findVin = await getVin(page);
-        // log.info({ vin: auto.vin }, "VIN fetched");
         break;
       case paramsDescription.sdk:
-        auto.sdk = await getSdk(page);
+        autoParams.sdk = await getSdk(page);
         break;
       case paramsDescription.euro_standard:
-        auto.euro_standard = value;
+        autoParams.euro_standard = value;
         break;
       case paramsDescription.first_registration_year_country:
-        auto.first_registration_year_country = value;
+        autoParams.first_registration_year_country = value;
         break;
       case paramsDescription.wheel_diameter:
-        auto.wheel_diameter = value;
+        autoParams.wheel_diameter = value;
         break;
       case paramsDescription.climate_control:
-        auto.climate_control = value;
+        autoParams.climate_control = value;
         break;
       default:
         log.debug({ key }, "Unknown parameter");
@@ -366,7 +316,6 @@ async function scrapeDetails(
     }
   }
 
-  // const images: string[] = [];
   const imagesFromLocator = await page
     .locator(".media-gallery-thumbnails > .thumbnail > img[data-src]")
     .all();
@@ -384,18 +333,34 @@ async function scrapeDetails(
     )
   ).filter((image) => image !== "");
 
-  const plates = await getPlates(images);
-  auto.plates = plates;
+  let vin: string | undefined;
+  if (findVin) vin = await getVinFromExternalPage(page, findVin);
+  if (!vin && autoParams.sdk)
+    vin = await getVinFromRegitra(page, autoParams.sdk, 0);
 
-  // External pages processing
-  if (findVin) auto.vin = await getVinFromExternalPage(page, findVin);
-
-  log.info({ images: images.length }, "Listing processed");
-
-  return {
-    auto,
+  const auto: insertAutoValidator = {
+    id: listing.id,
+    url: listing.url,
+    source: "autoplius",
+    price: listing.price,
+    price_old: listing.price_old,
+    description,
+    title: listing.title,
+    status: listing.status,
+    number,
+    location,
+    plates: [],
     images,
+    vin,
+    needs_regitra_lookup: false,
+    ...autoParams,
   };
+  log.info(
+    { url: listing.url, images: images.length, sdk: auto.sdk, vin: auto.vin },
+    "Listing processed"
+  );
+
+  return auto;
 }
 
 async function getVin(page: Page) {
@@ -458,7 +423,10 @@ async function getVinFromExternalPage(page: Page, url: string) {
       .locator(autoPatikraLocators.many_details_locator)
       .all();
     for (const detail of details) {
-      const detailText = normalizeText(await detail.textContent());
+      const detailText = normalizeText(await detail.textContent())?.replaceAll(
+        " ",
+        ""
+      );
       if (detailText?.length === 17) return detailText;
     }
   } catch (error) {
@@ -474,10 +442,9 @@ export const autopliusSource: ScraperSource = {
   name: "autoplius",
   host: new URL(AUTOPLIUS_BASE_URL).hostname,
   seeds: [buildSeedUrl()],
-  cookies: AUTOPLIUS_COOKIES.map((cookie) => ({ ...cookie })),
+  // cookies: AUTOPLIUS_COOKIES.map((cookie) => ({ ...cookie })),
   parseListingPage,
   resolveListingUrl: (listing) => listing.url,
   scrapeDetails,
-  // getVinFromExternalPage,
   // disabled: true,
 };

@@ -1,7 +1,150 @@
 //insert autos into convex
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-import { paginationOptsValidator } from "convex/server";
+import { query } from "./_generated/server";
+import { api, internal } from "./_generated/api";
+import {
+  insertArrayOfAutosValidator,
+  updateArrayOfAutosValidator,
+} from "./types";
+import { mutation } from "./triggers";
+
+export const getExistingIds = query({
+  args: { ids: v.array(v.string()) },
+  handler: async (ctx, { ids }) => {
+    if (ids.length === 0) return [];
+
+    const uniqueIds = Array.from(new Set(ids));
+    const autos: Array<{
+      id: string;
+      external_id: string;
+      price: number;
+      price_old?: number;
+      status: string | undefined;
+    }> = [];
+
+    for (const id of uniqueIds) {
+      const existing = await ctx.db
+        .query("autos")
+        .withIndex("by_external_id", (q) => q.eq("id", id))
+        .first();
+
+      if (!existing) continue;
+
+      autos.push({
+        id: existing.id,
+        external_id: id,
+        price: existing.price,
+        price_old: existing.price_old,
+        status: existing.status,
+      });
+    }
+
+    return autos;
+  },
+});
+
+export const insertAutos = mutation({
+  args: insertArrayOfAutosValidator,
+  handler: async (ctx, { autos }) => {
+    for (const auto of autos) {
+      try {
+        await ctx.db.insert("autos", auto);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error(errorMessage);
+        await ctx.scheduler.runAfter(0, internal.actions.sendErrorToDiscord, {
+          error: errorMessage,
+          auto: auto.url,
+          type: "insert",
+        });
+      }
+    }
+  },
+});
+
+export const updateAutos = mutation({
+  args: updateArrayOfAutosValidator,
+  handler: async (ctx, { autos }) => {
+    for (const auto of autos) {
+      try {
+        const { id, ...autoWithoutId } = auto;
+        await ctx.db.patch(auto.id, autoWithoutId);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.error(errorMessage);
+        await ctx.scheduler.runAfter(0, internal.actions.sendErrorToDiscord, {
+          error: errorMessage,
+          auto: auto.id,
+          type: "update",
+        });
+      }
+    }
+  },
+});
+
+export const updatePlates = mutation({
+  args: v.object({
+    id: v.id("autos"),
+    plates: v.array(v.string()),
+  }),
+  handler: async (ctx, { id, plates }) => {
+    await ctx.db.patch(id, { plates });
+  },
+});
+
+export const needsRegitraLookup = query({
+  handler: async (ctx) => {
+    const autos = await ctx.db
+      .query("autos")
+      .withIndex("by_regitra_lookup", (q) => q.eq("needs_regitra_lookup", true))
+      .collect();
+    return autos.map((auto) => {
+      {
+        return { id: auto._id, vin: auto.vin, plates: auto.plates };
+      }
+    });
+  },
+});
+
+export const updateFromRegitra = mutation({
+  args: v.object({
+    autos: v.array(
+      v.object({
+        id: v.id("autos"),
+        allowed_to_drive: v.optional(v.boolean()),
+        insurance: v.optional(v.boolean()),
+        wanted_by_police: v.optional(v.boolean()),
+        needs_regitra_lookup: v.boolean(),
+        plates: v.optional(v.array(v.string())),
+        technical_inspection_year: v.optional(v.number()),
+        technical_inspection_month: v.optional(v.number()),
+        technical_inspection_day: v.optional(v.number()),
+      })
+    ),
+  }),
+  handler: async (ctx, { autos }) => {
+    for (const auto of autos) {
+      const patchData = Object.fromEntries(
+        Object.entries({
+          allowed_to_drive: auto.allowed_to_drive,
+          insurance: auto.insurance,
+          wanted_by_police: auto.wanted_by_police,
+          needs_regitra_lookup: auto.needs_regitra_lookup,
+          plates: auto.plates,
+          technical_inspection_year: auto.technical_inspection_year,
+          technical_inspection_month: auto.technical_inspection_month,
+          technical_inspection_day: auto.technical_inspection_day,
+        }).filter(([_, v]) => v !== undefined)
+      );
+      if (Object.keys(patchData).length === 0) {
+        throw new Error("No fields provided to update");
+      }
+      await ctx.db.patch(auto.id, patchData);
+    }
+  },
+});
 
 // export const insertAutoArgs = v.array(
 //   v.object({
@@ -149,39 +292,6 @@ import { paginationOptsValidator } from "convex/server";
 //     return;
 //   },
 // });
-
-export const getIds = query({
-  args: { ids: v.array(v.string()) },
-  handler: async (ctx, args) => {
-    if (args.ids.length === 0) return [];
-
-    const uniqueIds = Array.from(new Set(args.ids));
-    const autos: Array<{
-      id: string;
-      status: string | undefined;
-      price: number;
-      price_old?: number;
-    }> = [];
-
-    for (const id of uniqueIds) {
-      const existing = await ctx.db
-        .query("autos")
-        .withIndex("by_external_id", (q) => q.eq("id", id))
-        .first();
-
-      if (!existing) continue;
-
-      autos.push({
-        id: existing.id,
-        status: existing.status,
-        price: existing.price,
-        price_old: existing.price_old,
-      });
-    }
-
-    return autos;
-  },
-});
 
 // export const updateAutos = mutation({
 //   args: {

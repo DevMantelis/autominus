@@ -8,7 +8,10 @@
  * @module
  */
 
+import type * as actions from "../actions.js";
 import type * as autos from "../autos.js";
+import type * as triggers from "../triggers.js";
+import type * as types from "../types.js";
 
 import type {
   ApiFromModules,
@@ -25,7 +28,10 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  actions: typeof actions;
   autos: typeof autos;
+  triggers: typeof triggers;
+  types: typeof types;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

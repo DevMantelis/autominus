@@ -19,6 +19,19 @@ export const config = [
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["*/_generated/server"],
+              importNames: ["query", "mutation", "action"],
+              message: "Use functions.ts for query, mutation, or action",
+            },
+          ],
+        },
+      ],
+      "@typescript-eslint/no-floating-promises": "error",
     },
   },
   {

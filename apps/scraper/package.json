@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "tsc && tsx src_new/scrape.ts",
-    "start": "tsx src_new/scrape.ts"
+    "dev": "tsc && tsx src/scrape.ts",
+    "start": "tsx src/scrape.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
     "@ghostery/adblocker-playwright": "^2.12.4",
     "@t3-oss/env-core": "^0.13.8",
     "convex": "^1.28.0",
+    "convex-helpers": "^0.1.104",
     "dayjs": "^1.11.18",
     "dotenv": "^17.2.3",
     "effect": "^3.18.4",
