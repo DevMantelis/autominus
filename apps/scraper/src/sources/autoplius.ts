@@ -7,6 +7,7 @@ import {
   normalizeText,
 } from "../helpers";
 import {
+  PlaywrightCookie,
   listingStatus,
   type ListingPageResult,
   type ScraperSource,
@@ -19,6 +20,19 @@ const log = logger.child({ source: "autoplius" });
 
 const AUTOPLIUS_BASE_URL =
   "https://autoplius.lt/skelbimai/naudoti-automobiliai";
+
+const AUTOPLIUS_COOKIES: PlaywrightCookie[] = [
+  {
+    domain: ".autoplius.lt",
+    path: "/",
+    name: "FCCDCF",
+    value:
+      "%5Bnull%2Cnull%2Cnull%2C%5B%22CQaJ9gAQaJ9gAEsACCLTCDFgAAAAAAAAABaYAAAUBQD-F2Y2EKFEWCuQUYIYBCugCAAxYhgAA0CBgAAGCQgQAgFJIIkCAEAIEAAEAAAQEgCAABQEBAAAIAAAAAqAACIABgAQCAQQIABAAAAhIAAAAAAEQAAIgEAAAAIIIgBABAAAAQAkDAAAAAAAAECAAAAACAAAAAAAAAAAAAAAEABgIABAAABEAAAAAAAACCQIAAAAAAAAAAAAAAAAAAAAAAEAAA.YAAAAAAAAAA%22%2C%222~~dv.61.89.122.161.184.196.230.314.442.445.494.550.576.827.1029.1033.1046.1047.1051.1097.1126.1166.1301.1342.1415.1725.1765.1942.1958.1987.2068.2072.2074.2107.2213.2219.2223.2224.2328.2331.2387.2416.2501.2567.2568.2575.2657.2686.2778.2869.2878.2908.2920.2963.3005.3023.3100.3126.3219.3234.3235.3253.3309.3731.6931.8931.13731.15731.33931%22%2C%2204576FBB-E4EB-4E5B-AC52-B18E85ED480C%22%5D%2Cnull%2Cnull%2C%5B%5B32%2C%22%5B%5C%22add28279-94c2-4e11-bcc7-871f2bd434ee%5C%22%2C%5B1761919721%2C884000000%5D%5D%22%5D%5D%5D",
+    httpOnly: false,
+    secure: false,
+    session: false,
+  },
+];
 
 const AUTOPLIUS_QUERY: Record<string, string> = {
   category_id: "2",
@@ -442,7 +456,7 @@ export const autopliusSource: ScraperSource = {
   name: "autoplius",
   host: new URL(AUTOPLIUS_BASE_URL).hostname,
   seeds: [buildSeedUrl()],
-  // cookies: AUTOPLIUS_COOKIES.map((cookie) => ({ ...cookie })),
+  cookies: AUTOPLIUS_COOKIES.map((cookie) => ({ ...cookie })),
   parseListingPage,
   resolveListingUrl: (listing) => listing.url,
   scrapeDetails,

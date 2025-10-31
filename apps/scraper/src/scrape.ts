@@ -46,6 +46,12 @@ async function insertAutos(
     logger.info(`Inserted ${listingsToInsert.length} listings.`);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(
+      {
+        error: errorMessage,
+      },
+      "Failed inserting autos."
+    );
     await fetch(env.DISCORD_WEBHOOK_ERRORS, {
       method: "POST",
       headers: {
@@ -101,15 +107,21 @@ async function regitraLookup(autos: needsRegitraLookup, browser: Browser) {
   const queue = new PQueue({ concurrency: 3 });
   queue.on("error", async (error) => {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    await fetch(env.DISCORD_WEBHOOK_ERRORS, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    logger.error(
+      {
+        error: errorMessage,
       },
-      body: JSON.stringify({
-        content: `Failed in the regitra queue:\n ${errorMessage}`,
-      }),
-    });
+      "Failed in the regitra queue."
+    );
+    // await fetch(env.DISCORD_WEBHOOK_ERRORS, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     content: `Failed in the regitra queue:\n ${errorMessage}`,
+    //   }),
+    // });
   });
 
   const toUpdate: updateFromRegitra["autos"] = [];
@@ -123,6 +135,12 @@ async function regitraLookup(autos: needsRegitraLookup, browser: Browser) {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(
+      {
+        error: errorMessage,
+      },
+      "Failed updating regitra data."
+    );
     await fetch(env.DISCORD_WEBHOOK_ERRORS, {
       method: "POST",
       headers: {
@@ -174,10 +192,14 @@ async function scrapeRegitraLookup({
         await page
           .getByRole("button", { exact: true, name: "Ieškoti" })
           .click();
-        await page
-          .locator(".MuiTableRow-root:has(td):has(th)")
-          .first()
-          .waitFor({ state: "visible", timeout: 5000 });
+        try {
+          await page
+            .locator(".MuiTableRow-root:has(td):has(th)")
+            .first()
+            .waitFor({ state: "visible", timeout: 5000 });
+        } catch {
+          continue;
+        }
         const tableRows = await page
           .locator(".MuiTableRow-root:has(td):has(th)")
           .all();
@@ -228,6 +250,12 @@ async function scrapeRegitraLookup({
 
 main().catch(async (error) => {
   const errorMessage = error instanceof Error ? error.message : String(error);
+  logger.error(
+    {
+      error: errorMessage,
+    },
+    "Failed in the regitra queue."
+  );
   await fetch(env.DISCORD_WEBHOOK_ERRORS, {
     method: "POST",
     headers: {

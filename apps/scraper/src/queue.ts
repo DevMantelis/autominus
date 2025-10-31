@@ -63,6 +63,12 @@ export class Queue {
     this.queue.on("error", async (error) => {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
+      logger.error(
+        {
+          error: errorMessage,
+        },
+        "Failed in the queue."
+      );
       await fetch(env.DISCORD_WEBHOOK_ERRORS, {
         method: "POST",
         headers: {
