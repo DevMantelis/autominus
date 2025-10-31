@@ -4,12 +4,13 @@
   "description": "",
   "scripts": {
     "dev": "tsc && tsx src/scrape.ts",
-    "start": "tsx src/scrape.ts",
+    "start": "pnpm run ensure-deps && pnpm run ensure-browsers && tsx src/scrape.ts",
     "build": "pnpm run check-types",
     "lint": "eslint .",
     "check-types": "tsc --project tsconfig.json --noEmit",
+    "ensure-deps": "playwright install-deps chromium",
     "ensure-browsers": "playwright install --with-deps chromium",
-    "postinstall": "pnpm run ensure-browsers"
+    "postinstall": "pnpm run ensure-deps && pnpm run ensure-browsers"
   },
   "keywords": [],
   "author": "",
