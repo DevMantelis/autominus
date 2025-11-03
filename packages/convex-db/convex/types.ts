@@ -1,10 +1,9 @@
-import { Infer, v } from "convex/values";
-import { Doc } from "./_generated/dataModel";
+import { type Infer, v } from "convex/values";
 import { autosTable } from "./schema";
 import { useQueries } from "convex/react";
 import { makeUseQueryWithStatus } from "convex-helpers/react";
 import { needsRegitraLookup } from "./autos";
-import { FunctionArgs, FunctionReturnType } from "convex/server";
+import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { api } from "./_generated/api";
 
 export const insertAutoValidator = v.object(autosTable);

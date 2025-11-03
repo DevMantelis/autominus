@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 import { getNumberContent, getTextContent, logger } from "../helpers";
 import {
-  PlaywrightCookie,
+  type PlaywrightCookie,
   listingStatus,
   type ListingPageResult,
   type ScraperSource,

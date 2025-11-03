@@ -1,4 +1,5 @@
 import { env } from "../env";
+import { logError } from "./error";
 import { logger } from "./helpers";
 
 const log = logger.child({ module: "getPlates" });
@@ -16,10 +17,7 @@ export async function getPlates(images: string[]): Promise<string[]> {
     const data = (await response.json()) as { plates: string[] };
     return data.plates;
   } catch (error) {
-    log.error(
-      { error: error instanceof Error ? error.message : String(error) },
-      "Error getting plates"
-    );
+    await logError("Error getting plates", error);
     return [];
   }
 }

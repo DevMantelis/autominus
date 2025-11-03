@@ -3,6 +3,6 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["env.ts", "src_new/**/*.ts"],
-  "exclude": ["node_modules", "src/**/*"]
+  // "include": ["env.ts", "src/*.ts"],
+  "exclude": ["node_modules"]
 }

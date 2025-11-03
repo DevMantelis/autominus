@@ -1,9 +1,10 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import type { ScraperSource } from "../types";
 import { autogidasSource } from "./autogidas";
 import { autopliusSource } from "./autoplius";
 import { env } from "../../env";
-import { delay, logger, normalizeText } from "../helpers";
+import { delay, normalizeText } from "../helpers";
+import { logError } from "../error";
 
 const sources: ScraperSource[] = [autopliusSource, autogidasSource];
 
@@ -42,10 +43,7 @@ export async function getVinFromRegitra(
       return value;
     }
   } catch (error) {
-    logger.error(
-      { error: error instanceof Error ? error.message : String(error) },
-      "Error getting plates"
-    );
+    await logError("Error getting plates", error);
     if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
   }
   return undefined;

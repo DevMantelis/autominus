@@ -1,4 +1,4 @@
-import { Browser, BrowserContext, Page } from "@playwright/test";
+import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { chromium } from "playwright-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { fullLists, PlaywrightBlocker } from "@ghostery/adblocker-playwright";

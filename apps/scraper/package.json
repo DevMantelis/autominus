@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "tsc && tsx src/scrape.ts",
-    "start": "pnpm run ensure-deps && pnpm run ensure-browsers && tsx src/scrape.ts",
-    "build": "pnpm run check-types",
+    "dev": "tsc && tsx src/main.ts",
+    "start": "tsx src/main.ts",
     "lint": "eslint .",
-    "check-types": "tsc --project tsconfig.json --noEmit",
-    "ensure-deps": "playwright install-deps chromium",
-    "ensure-browsers": "playwright install --with-deps chromium",
-    "postinstall": "pnpm run ensure-deps && pnpm run ensure-browsers"
+    "check-types": "tsc",
+    "postinstall": "pnpm exec playwright install --with-deps"
   },
   "keywords": [],
   "author": "",

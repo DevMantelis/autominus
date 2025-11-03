@@ -12,26 +12,21 @@ import onlyWarn from "eslint-plugin-only-warn";
 export const config = [
   js.configs.recommended,
   eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  {
+      languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+  },
   {
     plugins: {
       turbo: turboPlugin,
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["*/_generated/server"],
-              importNames: ["query", "mutation", "action"],
-              message: "Use functions.ts for query, mutation, or action",
-            },
-          ],
-        },
-      ],
-      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-floating-promises": "error"
     },
   },
   {

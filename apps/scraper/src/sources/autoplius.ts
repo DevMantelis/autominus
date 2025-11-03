@@ -7,7 +7,7 @@ import {
   normalizeText,
 } from "../helpers";
 import {
-  PlaywrightCookie,
+  type PlaywrightCookie,
   listingStatus,
   type ListingPageResult,
   type ScraperSource,
@@ -15,6 +15,7 @@ import {
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
 import { getVinFromRegitra } from ".";
+import { logError } from "../error";
 
 const log = logger.child({ source: "autoplius" });
 
@@ -497,10 +498,7 @@ async function getVin(page: Page) {
     const vin = await vinLocator.first().getAttribute("href");
     if (vin) return vin;
   } catch (error) {
-    log.warn(
-      { error: error instanceof Error ? error.message : String(error) },
-      "VIN button not found"
-    );
+    await logError("VIN button not found", error);
   }
   return undefined;
 }
@@ -556,10 +554,7 @@ async function getVinFromExternalPage(page: Page, url: string) {
       if (detailText?.length === 17) return detailText;
     }
   } catch (error) {
-    log.warn(
-      { error: error instanceof Error ? error.message : String(error) },
-      "Failed to fetch VIN from external page"
-    );
+    await logError("Failed to fetch VIN from autoPatikra", error);
   }
   return undefined;
 }
