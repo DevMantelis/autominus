@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "tsc && tsx src/main.ts",
     "start": "tsx src/main.ts",
+    "build": "tsc",
     "lint": "eslint .",
-    "check-types": "tsc",
     "postinstall": "pnpm exec playwright install --with-deps"
   },
   "keywords": [],
