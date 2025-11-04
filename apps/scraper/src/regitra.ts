@@ -141,9 +141,13 @@ export class Regitra {
         }
       }
     } catch (error) {
-      await logError("Failed in regitra lookup", error, {
-        sendToDiscord: true,
-      });
+      await logError(
+        `Failed in regitra lookup: ${id}, ${vin}, ${plates.join(" ")}`,
+        error,
+        {
+          sendToDiscord: true,
+        }
+      );
     } finally {
       await page.close();
     }
