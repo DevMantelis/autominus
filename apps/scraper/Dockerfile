@@ -41,5 +41,6 @@ USER pwuser
 WORKDIR /app/apps/scraper
 
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--experimental-specifier-resolution=node
 
-CMD ["node", "dist/src/main.js"]
+CMD ["node", "dist/main.js"]
