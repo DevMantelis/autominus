@@ -466,8 +466,11 @@ async function scrapeDetails(
 
   let vin: string | undefined;
   if (findVin) vin = await getVinFromExternalPage(page, findVin);
-  if (!vin && autoParams.sdk)
-    vin = await getVinFromRegitra(page, autoParams.sdk, 0);
+  if (!vin && autoParams.sdk) {
+    const sdkResult = await getVinFromRegitra(page, autoParams.sdk, 0);
+    vin = sdkResult.vin;
+    if (!sdkResult.isSdkValid) autoParams.sdk = undefined;
+  }
 
   const auto: insertAutoValidator = {
     id: listing.id,

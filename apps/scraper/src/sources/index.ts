@@ -3,7 +3,7 @@ import type { ScraperSource } from "../types";
 import { autogidasSource } from "./autogidas";
 import { autopliusSource } from "./autoplius";
 import { env } from "../../env";
-import { delay, normalizeText } from "../helpers";
+import { delay, getTextContent, normalizeText } from "../helpers";
 import { logError } from "../error";
 
 const sources: ScraperSource[] = [autopliusSource, autogidasSource];
@@ -16,8 +16,16 @@ export async function getVinFromRegitra(
   page: Page,
   sdk: string,
   retryCount: number
-): Promise<string | undefined> {
-  if (sdk.length !== 8 || retryCount < 0) return undefined;
+): Promise<{ isSdkValid: boolean; vin: string | undefined }> {
+  if (sdk.length !== 8 || retryCount < 0)
+    return { isSdkValid: false, vin: undefined };
+  const errors: {
+    notValid: boolean;
+    notFound: boolean;
+  } = {
+    notValid: false,
+    notFound: false,
+  };
   try {
     await page.goto(env.REGITRA_FIND_VIN, { waitUntil: "load" });
     await delay(1000);
@@ -40,34 +48,30 @@ export async function getVinFromRegitra(
       )?.toLowerCase();
       const value = normalizeText(await row.locator("td").textContent());
       if (label !== "Identifikavimo numeris".toLowerCase()) continue;
-      return value;
+      return { isSdkValid: true, vin: value };
     }
   } catch (error) {
     let errorMessage = `Error getting vin from regitra (${sdk})`;
-    try {
-      const wrongSDK = normalizeText(
-        await page
-          .locator("p#ownerDeclCode-helper-text")
-          .textContent({ timeout: 5000 })
-      )?.toLowerCase();
-      if (wrongSDK?.includes("neteisingai")) errorMessage += ", sdk not valid.";
-    } catch {
-      try {
-        const wrongSDK2 = normalizeText(
-          await page
-            .locator("main div.MuiAlert-message")
-            .textContent({ timeout: 5000 })
-        )?.toLowerCase();
-        if (wrongSDK2?.includes("nerasta")) errorMessage += ", sdk not found.";
-      } catch {
-        const buffer = await page.screenshot();
-        errorMessage += buffer.toString("base64");
-      }
-    } finally {
-      await logError(errorMessage, error);
+    errors.notValid =
+      (await getTextContent(page, "p#ownerDeclCode-helper-text"))
+        ?.toLowerCase()
+        .includes("neteisingai") || false;
+    errors.notFound =
+      (await getTextContent(page, "main div.MuiAlert-message"))
+        ?.toLowerCase()
+        .includes("nerasta") || false;
+    if (errors.notValid) {
+      errorMessage += ", sdk not valid.";
       retryCount = Infinity;
+    } else if (errors.notFound) {
+      errorMessage += ", sdk not found.";
+      retryCount = Infinity;
+    } else if (retryCount === 0) {
+      const buffer = await page.screenshot();
+      errorMessage += buffer.toString("base64");
     }
-    if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
+    await logError(errorMessage, error);
   }
-  return undefined;
+  if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
+  return { isSdkValid: !errors.notFound && !errors.notValid, vin: undefined };
 }

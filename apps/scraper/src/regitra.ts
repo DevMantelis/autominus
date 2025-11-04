@@ -8,6 +8,7 @@ import type {
 } from "@repo/convex-db/convex/types";
 import { delay, normalizeText } from "./helpers";
 import { DB } from "./database";
+import type { PlaywrightCookie } from "./types";
 
 export class Regitra {
   private queue: PQueue;
@@ -15,6 +16,46 @@ export class Regitra {
   private context: BrowserContext;
   private toUpdate: updateFromRegitra["autos"] = [];
   private db: DB;
+  private cookies: PlaywrightCookie[] = [
+    {
+      domain: ".eregitra.lt",
+      path: "/",
+      name: "__cmpconsent33776",
+      value: "CQaW3rAQaW3rAAfXDBLTCDFgAAAAAAAAAAigAAAAAAAA",
+      httpOnly: false,
+      secure: true,
+      session: false,
+    },
+    {
+      domain: "www.eregitra.lt",
+      path: "/",
+      name: "TS6a100eb4027",
+      value:
+        "08da0529f9ab20003cf19c7440450e8afc829e8a9363574843981e3e9793f73db1bcad0809443f4d082838bc8b113000b4d41d411e5afd2bec823fc6648b5c4a728f8fd2835019c7b37c876aa1ed770ce24a727048d860d3059d37952528b942",
+      httpOnly: false,
+      secure: false,
+      session: true,
+    },
+    {
+      domain: ".eregitra.lt",
+      path: "/",
+      name: "__cmpcccu33776",
+      value: "aCQaZhtNgAsAUhjKjEhNQpgAkUUFgA",
+      httpOnly: false,
+      secure: true,
+      session: false,
+    },
+    {
+      domain: ".www.eregitra.lt",
+      path: "/",
+      name: "TS0194d478",
+      value:
+        "01f0a37145b70d63f8524fc7097aebb50335fe184a3876dbdd27c0cac3f9e2606dc4c88973fb0bcc6cdcc20d84b67bd5ebb2a35ecd",
+      httpOnly: false,
+      secure: false,
+      session: true,
+    },
+  ];
   constructor(db: DB) {
     this.queue = new PQueue({ concurrency: 3 });
     this.db = db;
@@ -22,7 +63,9 @@ export class Regitra {
   async start(browser: Browser) {
     const autos = await this.db.getAutosForLookup();
     if (!autos || autos.length === 0) return;
+
     this.context = await browser.newContext();
+    await this.context.addCookies(this.cookies);
 
     for (const auto of autos) {
       const { id, vin, plates } = auto;

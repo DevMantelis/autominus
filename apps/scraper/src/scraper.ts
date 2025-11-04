@@ -9,7 +9,6 @@ import type {
 import { env } from "../env";
 import type { Browser, BrowserContext } from "@playwright/test";
 import { createPage } from "./browser";
-import type { Id } from "@repo/convex-db/convex/_generated/dataModel";
 import {
   insertArrayOfAutosValidator,
   updateArrayOfAutosValidator,
@@ -110,7 +109,7 @@ export class Scraper {
         listing.status !== existing.status
       ) {
         toUpdate.push({
-          id: existing.id as Id<"autos">,
+          id: existing.id,
           price: listing.price,
           price_old: existing.price,
           status: listing.status,

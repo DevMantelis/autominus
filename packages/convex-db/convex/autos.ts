@@ -7,6 +7,7 @@ import {
   updateArrayOfAutosValidator,
 } from "./types";
 import { mutation } from "./triggers";
+import { Id } from "./_generated/dataModel";
 
 export const getExistingIds = query({
   args: { ids: v.array(v.string()) },
@@ -15,7 +16,7 @@ export const getExistingIds = query({
 
     const uniqueIds = Array.from(new Set(ids));
     const autos: Array<{
-      id: string;
+      id: Id<"autos">;
       external_id: string;
       price: number;
       price_old?: number;
