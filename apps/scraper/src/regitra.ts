@@ -11,7 +11,7 @@ import { DB } from "./database";
 
 export class Regitra {
   private queue: PQueue;
-  // @ts-ignore
+  //@ts-expect-error Context initiated on start function
   private context: BrowserContext;
   private toUpdate: updateFromRegitra["autos"] = [];
   private db: DB;

@@ -21,7 +21,7 @@ import { logger } from "./helpers";
 export class Scraper {
   private queue: PQueue;
   private source: ScraperSource;
-  //@ts-ignore
+  //@ts-expect-error Context initiated on start function
   private context: BrowserContext;
   private db: DB;
 

@@ -31,8 +31,8 @@ export const getExistingIds = query({
       if (!existing) continue;
 
       autos.push({
-        id: existing.id,
-        external_id: id,
+        id: existing._id,
+        external_id: existing.id,
         price: existing.price,
         price_old: existing.price_old,
         status: existing.status,
