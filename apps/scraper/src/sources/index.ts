@@ -43,7 +43,16 @@ export async function getVinFromRegitra(
       return value;
     }
   } catch (error) {
-    await logError("Error getting vin from regitra.", error);
+    let errorMessage = `Error getting vin from regitra (${sdk})`;
+    try {
+      const wrongSDK = normalizeText(
+        await page.locator("p#ownerDeclCode-helper-text").textContent()
+      )?.toLowerCase();
+      if (wrongSDK?.includes("neteisingai")) errorMessage += ", sdk not valid.";
+    } finally {
+      await logError(errorMessage, error);
+      retryCount = Infinity;
+    }
     if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
   }
   return undefined;
