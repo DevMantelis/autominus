@@ -6,8 +6,7 @@
     "dev": "tsc && tsx src/main.ts",
     "start": "tsx src/main.ts",
     "build": "tsc",
-    "lint": "eslint .",
-    "postinstall": "pnpm playwright install --with-deps chromium"
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
