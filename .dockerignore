@@ -1,0 +1,10 @@
+.git
+.github
+.turbo
+.vscode
+node_modules
+pnpm-debug.log
+.env*
+dist
+tmp
+**/node_modules

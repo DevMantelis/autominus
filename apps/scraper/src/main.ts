@@ -14,20 +14,19 @@ async function main() {
   const sources = gatherSources();
   const db = new DB(convex);
   try {
-    await browser.newPage();
-    // await Promise.allSettled(
-    //   sources.map(async (source) => {
-    //     const queue = new Scraper(source, db);
-    //     const { listingsToInsert, listingsToUpdate } =
-    //       await queue.start(browser);
-    //     await db.insertAutos(listingsToInsert);
-    //     await db.updateAutos(listingsToUpdate);
-    //   })
-    // );
+    await Promise.allSettled(
+      sources.map(async (source) => {
+        const queue = new Scraper(source, db);
+        const { listingsToInsert, listingsToUpdate } =
+          await queue.start(browser);
+        await db.insertAutos(listingsToInsert);
+        await db.updateAutos(listingsToUpdate);
+      })
+    );
 
-    // const regitra = new Regitra(db);
-    // const toUpdate = await regitra.start(browser);
-    // if (toUpdate) await db.updateRegitraLookup(toUpdate);
+    const regitra = new Regitra(db);
+    const toUpdate = await regitra.start(browser);
+    if (toUpdate) await db.updateRegitraLookup(toUpdate);
   } catch (error) {
     await logError("Failed in main", error, {
       sendToDiscord: true,

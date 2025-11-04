@@ -1,0 +1,11 @@
+node_modules
+.turbo
+.next
+pnpm-lock.yaml
+pnpm-debug.log
+dist
+tmp
+.env.local
+.env.*
+.git
+.github
