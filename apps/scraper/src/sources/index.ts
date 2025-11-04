@@ -19,7 +19,7 @@ export async function getVinFromRegitra(
 ): Promise<string | undefined> {
   if (sdk.length !== 8 || retryCount < 0) return undefined;
   try {
-    await page.goto(env.REGITRA_FIND_VIN, { waitUntil: "domcontentloaded" });
+    await page.goto(env.REGITRA_FIND_VIN, { waitUntil: "load" });
     await delay(1000);
     await page.locator("input#ownerDeclCode").fill(sdk);
     await delay(2000);

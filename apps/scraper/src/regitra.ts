@@ -69,7 +69,7 @@ export class Regitra {
     const page = await this.context.newPage();
     try {
       await page.goto(env.REGITRA_LOOKUP, {
-        waitUntil: "domcontentloaded",
+        waitUntil: "load",
       });
       for (const plate of plates) {
         const data: updateFromRegitra["autos"][number] = {
