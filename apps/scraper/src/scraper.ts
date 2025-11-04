@@ -16,7 +16,6 @@ import {
 } from "@repo/convex-db/convex/types";
 import { logError } from "./error";
 import { DB } from "./database";
-import { logger } from "./helpers";
 
 export class Scraper {
   private queue: PQueue;
@@ -44,7 +43,6 @@ export class Scraper {
       this.add(async () => await this.scrapeListing(seed));
     });
     await this.queue.onIdle();
-    logger.info("closed");
     await this.context.close();
     return {
       listingsToInsert: this.listingsToInsert,
