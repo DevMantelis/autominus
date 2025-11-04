@@ -15,6 +15,7 @@ import {
 } from "@repo/convex-db/convex/types";
 import { logError } from "./error";
 import { DB } from "./database";
+import { logger } from "./helpers";
 
 export class Scraper {
   private queue: PQueue;
@@ -108,6 +109,16 @@ export class Scraper {
         listing.price !== existing.price ||
         listing.status !== existing.status
       ) {
+        logger.info({
+          existing: existing,
+          now: listing,
+          pushed: {
+            id: existing.id,
+            price: listing.price,
+            price_old: existing.price,
+            status: listing.status,
+          },
+        });
         toUpdate.push({
           id: existing.id,
           price: listing.price,
