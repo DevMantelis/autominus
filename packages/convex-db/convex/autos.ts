@@ -1,13 +1,13 @@
 //insert autos into convex
 import { v } from "convex/values";
 import { query } from "./_generated/server";
-import { api, internal } from "./_generated/api";
+import { internal } from "./_generated/api";
 import {
   insertArrayOfAutosValidator,
   updateArrayOfAutosValidator,
 } from "./types";
 import { mutation } from "./triggers";
-import { Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 
 export const getExistingIds = query({
   args: { ids: v.array(v.string()) },
