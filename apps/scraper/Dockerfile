@@ -22,7 +22,6 @@ RUN pnpm fetch --filter scraper...
 
 FROM base AS runner
 
-ENV NODE_ENV=production
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
@@ -33,11 +32,13 @@ COPY apps/scraper ./apps/scraper
 
 USER root
 
-RUN pnpm install --filter scraper... --frozen-lockfile --offline
+RUN pnpm install --filter scraper... --frozen-lockfile --offline --prod=false
 RUN pnpm --filter scraper... run build
 RUN chown -R pwuser:pwuser /app
 
 USER pwuser
 WORKDIR /app/apps/scraper
+
+ENV NODE_ENV=production
 
 CMD ["pnpm", "start"]
