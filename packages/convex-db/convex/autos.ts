@@ -40,6 +40,8 @@ export const getExistingIds = query({
       });
     }
 
+    console.log(autos);
+
     return autos;
   },
 });
