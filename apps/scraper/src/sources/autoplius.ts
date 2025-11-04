@@ -235,8 +235,12 @@ async function parseListingPage(
 ): Promise<ListingPageResult> {
   const listings = await page.locator(listingLocators.listings).all();
   log.info({ currentUrl, count: listings.length }, "Found potential listings");
-  if (listings.length === 0)
-    throw new Error("Failed to scrape listings, got 0.");
+  if (listings.length === 0) {
+    const buffer = await page.screenshot();
+    throw new Error(
+      `Failed to scrape listings, got 0. Base64: ${buffer.toString("base64")}`
+    );
+  }
 
   const items: ListingPageResult["listings"] = [];
   for (const listing of listings) {

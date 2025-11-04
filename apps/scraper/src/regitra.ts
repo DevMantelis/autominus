@@ -141,8 +141,9 @@ export class Regitra {
         }
       }
     } catch (error) {
+      const buffer = await page.screenshot();
       await logError(
-        `Failed in regitra lookup: ${id}, ${vin}, ${plates.join(" ")}`,
+        `Failed in regitra lookup: ${id}, ${vin}, ${plates.join(" ")}. Base64: ${buffer.toString("base64")}`,
         error,
         {
           sendToDiscord: true,

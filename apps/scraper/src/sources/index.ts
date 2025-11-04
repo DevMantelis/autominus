@@ -50,7 +50,11 @@ export async function getVinFromRegitra(
       )?.toLowerCase();
       if (wrongSDK?.includes("neteisingai")) errorMessage += ", sdk not valid.";
     } finally {
-      await logError(errorMessage, error);
+      const buffer = await page.screenshot();
+      await logError(
+        errorMessage + ` Base64: ${buffer.toString("base64")}`,
+        error
+      );
       retryCount = Infinity;
     }
     if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
