@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "tsc && tsx src/main.ts",
     "start": "tsx src/main.ts",
-    "build": "tsc",
     "lint": "eslint ."
   },
   "keywords": [],
