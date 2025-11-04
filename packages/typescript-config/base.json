@@ -15,10 +15,8 @@
     "skipLibCheck": true,
     "strict": true,
     "verbatimModuleSyntax": true,
-    "allowImportingTsExtensions": true,
     "target": "ES2022",
     "noImplicitOverride": true,
-    "noEmit": true,
     "sourceMap": true
   }
 }

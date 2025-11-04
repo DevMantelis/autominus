@@ -43,7 +43,7 @@ export async function getVinFromRegitra(
       return value;
     }
   } catch (error) {
-    await logError("Error getting plates", error);
+    await logError("Error getting vin from regitra.", error);
     if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
   }
   return undefined;

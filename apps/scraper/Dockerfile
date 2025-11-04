@@ -32,8 +32,9 @@ COPY apps/scraper ./apps/scraper
 
 USER root
 
-RUN pnpm install --filter scraper... --frozen-lockfile --offline --prod=false
-RUN pnpm --filter scraper... run build
+RUN pnpm install --filter scraper... --frozen-lockfile --offline --prod=false \
+  && pnpm --filter scraper... run build \
+  && pnpm prune --prod
 RUN chown -R pwuser:pwuser /app
 
 USER pwuser
@@ -41,4 +42,4 @@ WORKDIR /app/apps/scraper
 
 ENV NODE_ENV=production
 
-CMD ["pnpm", "start"]
+CMD ["node", "dist/src/main.js"]

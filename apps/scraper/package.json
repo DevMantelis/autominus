@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "tsc && tsx src/main.ts",
-    "start": "tsx src/main.ts",
+    "dev": "tsc --noEmit && tsx src/main.ts",
+    "start": "node dist/src/main.js",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint ."
   },
   "keywords": [],
