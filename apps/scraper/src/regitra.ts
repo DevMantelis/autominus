@@ -77,12 +77,6 @@ export class Regitra {
     return this.toUpdate;
   }
   initializeQueue() {
-    // this.queue.on(
-    //   "completed",
-    //   async (result: Awaited<ReturnType<typeof this.lookUp>>) => {
-    //     this.toUpdate.push(result);
-    //   }
-    // );
     this.queue.on("error", (error): void => {
       void logError("Failed in regitra queue.", error, {
         sendToDiscord: true,
