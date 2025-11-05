@@ -231,15 +231,19 @@ async function extractListingPrice(
 
 async function parseListingPage(
   page: Page,
-  currentUrl: string
+  currentUrl: string,
+  retry: number = 0
 ): Promise<ListingPageResult> {
   const listings = await page.locator(listingLocators.listings).all();
   log.info({ currentUrl, count: listings.length }, "Found potential listings");
   if (listings.length === 0) {
-    const buffer = await page.screenshot();
-    throw new Error(
-      `Failed to scrape listings, got 0. Base64: ${buffer.toString("base64")}`
-    );
+    if (retry < 2) return parseListingPage(page, currentUrl, retry + 1);
+    else {
+      const buffer = await page.screenshot();
+      throw new Error(
+        `Failed to scrape listings, got 0. Base64: ${buffer.toString("base64")}`
+      );
+    }
   }
 
   const items: ListingPageResult["listings"] = [];
