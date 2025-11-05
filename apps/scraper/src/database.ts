@@ -30,8 +30,6 @@ export class DB {
   async updateAutos(listingsToUpdate: updateArrayOfAutosValidator["autos"]) {
     if (listingsToUpdate.length === 0) return;
 
-    logger.info({ listingsToUpdate });
-
     try {
       await this.convex.mutation(api.autos.updateAutos, {
         autos: listingsToUpdate,

@@ -12,6 +12,7 @@ export const env = createEnv({
     PLATES_API_URL: z.url(),
     REGITRA_FIND_VIN: z.url(),
     REGITRA_LOOKUP: z.url(),
+    CAPTCHA_KEY: z.string(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

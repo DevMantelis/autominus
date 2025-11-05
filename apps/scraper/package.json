@@ -18,6 +18,7 @@
     "@t3-oss/env-core": "^0.13.8",
     "convex": "^1.28.0",
     "convex-helpers": "^0.1.104",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "p-queue": "^9.0.0",
     "pino": "^10.1.0",

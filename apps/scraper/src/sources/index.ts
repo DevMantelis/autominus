@@ -5,6 +5,8 @@ import { autopliusSource } from "./autoplius";
 import { env } from "../../env";
 import { delay, getTextContent, normalizeText } from "../helpers";
 import { logError } from "../error";
+import { solveCaptcha } from "../captcha";
+import { regitraInsuranceError, regitraVin } from "../validators";
 
 const sources: ScraperSource[] = [autopliusSource, autogidasSource];
 
@@ -74,4 +76,77 @@ export async function getVinFromRegitra(
   }
   if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
   return { isSdkValid: !errors.notFound && !errors.notValid, vin: undefined };
+}
+
+export async function getVinFromRegitraApi(
+  sdk: string
+): Promise<{ isSdkValid: boolean; vin: string | undefined }> {
+  let retry = 0;
+  while (retry < 3) {
+    const token = await solveCaptcha({
+      type: "RecaptchaV3TaskProxyless",
+      websiteURL:
+        "https://www.eregitra.lt/services/vehicle-declaration/info-by-owner-declaration-code-search",
+      websiteKey: "6LcQOk8cAAAAAMsa9rDuPic8nHpD_pFBGAUPvb7c",
+      minScore: 0.9,
+      action: "vehicleSearchByOdCode",
+    });
+    try {
+      if (!token) throw new Error("Failed getting token from captcha.");
+
+      const response = await fetch(
+        "https://www.eregitra.lt/clients-self-service-backend/public/vehicle/info-owner-decl-code",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Host: "www.eregitra.lt",
+            Origin: "https://www.eregitra.lt",
+          },
+          body: JSON.stringify({
+            ownerDeclCode: sdk,
+            googleRecaptchaToken: token,
+          }),
+        }
+      );
+      //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const responseJson = await response.json();
+
+      const errorData =
+        await regitraInsuranceError.safeParseAsync(responseJson);
+      if (errorData.success) {
+        if (
+          errorData.data.message
+            .toLowerCase()
+            .includes("actual declaration not found")
+        )
+          return { isSdkValid: false, vin: undefined };
+        if (errorData.data.message.includes("INVALID_RECAPTCHA")) {
+          throw new Error(
+            `Got invalid captcha to perform vin check. Error: ${errorData.data.message}`
+          );
+        } else {
+          throw new Error(
+            `Got unknown error from regitra vin. Error: ${errorData.data.message}`
+          );
+        }
+      }
+
+      const data = await regitraVin.parseAsync(responseJson);
+      return {
+        isSdkValid: true,
+        vin: data.vehicleVin,
+      };
+    } catch (error) {
+      await logError(
+        `Error from regitra insurance (Retry: ${retry}/2).`,
+        error,
+        {
+          sendToDiscord: true,
+        }
+      );
+      retry++;
+    }
+  }
+  return { isSdkValid: true, vin: undefined };
 }

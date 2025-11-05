@@ -34,6 +34,9 @@ importers:
       convex-helpers:
         specifier: ^0.1.104
         version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(zod@4.1.12)
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.19
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -127,11 +130,11 @@ importers:
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.2)(zod@4.1.12)
       convex:
-        specifier: ^1.28.0
-        version: 1.28.0(react@19.1.0)
+        specifier: ^1.28.2
+        version: 1.28.2(react@19.1.0)
       convex-helpers:
         specifier: ^0.1.104
-        version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(zod@4.1.12)
+        version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(zod@4.1.12)
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -1132,6 +1135,22 @@ packages:
       react:
         optional: true
 
+  convex@1.28.2:
+    resolution: {integrity: sha512-KzNsLbcVXb1OhpVQ+vHMgu+hjrsQ1ks5BZwJ2lR8O+nfbeJXE6tHbvsg1H17+ooUDvIDBSMT3vXS+AlodDhTnQ==}
+    engines: {node: '>=18.0.0', npm: '>=7.0.0'}
+    hasBin: true
+    peerDependencies:
+      '@auth0/auth0-react': ^2.0.1
+      '@clerk/clerk-react': ^4.12.8 || ^5.0.0
+      react: ^18.0.0 || ^19.0.0-0 || ^19.0.0
+    peerDependenciesMeta:
+      '@auth0/auth0-react':
+        optional: true
+      '@clerk/clerk-react':
+        optional: true
+      react:
+        optional: true
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -1153,6 +1172,9 @@ packages:
 
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
+
+  dayjs@1.11.19:
+    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -3275,7 +3297,23 @@ snapshots:
       typescript: 5.9.2
       zod: 4.1.12
 
+  convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(react@19.1.0))(react@19.1.0)(typescript@5.9.2)(zod@4.1.12):
+    dependencies:
+      convex: 1.28.2(react@19.1.0)
+    optionalDependencies:
+      '@standard-schema/spec': 1.0.0
+      react: 19.1.0
+      typescript: 5.9.2
+      zod: 4.1.12
+
   convex@1.28.0(react@19.1.0):
+    dependencies:
+      esbuild: 0.25.4
+      prettier: 3.6.2
+    optionalDependencies:
+      react: 19.1.0
+
+  convex@1.28.2(react@19.1.0):
     dependencies:
       esbuild: 0.25.4
       prettier: 3.6.2
@@ -3309,6 +3347,8 @@ snapshots:
       is-data-view: 1.0.2
 
   dateformat@4.6.3: {}
+
+  dayjs@1.11.19: {}
 
   debug@4.4.1:
     dependencies:

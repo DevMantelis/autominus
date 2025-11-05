@@ -14,7 +14,7 @@ import {
   type initialListingT,
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
-import { getVinFromRegitra } from ".";
+import { getVinFromRegitra, getVinFromRegitraApi } from ".";
 import { logError } from "../error";
 
 const log = logger.child({ source: "autoplius" });
@@ -467,7 +467,7 @@ async function scrapeDetails(
   let vin: string | undefined;
   if (findVin) vin = await getVinFromExternalPage(page, findVin);
   if (!vin && autoParams.sdk) {
-    const sdkResult = await getVinFromRegitra(page, autoParams.sdk, 0);
+    const sdkResult = await getVinFromRegitraApi(autoParams.sdk);
     vin = sdkResult.vin;
     if (!sdkResult.isSdkValid) autoParams.sdk = undefined;
   }

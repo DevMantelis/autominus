@@ -11,7 +11,7 @@
   "type": "module",
   "dependencies": {
     "@t3-oss/env-core": "^0.13.8",
-    "convex": "^1.28.0",
+    "convex": "^1.28.2",
     "convex-helpers": "^0.1.104",
     "dotenv": "^17.2.3",
     "zod": "^4.1.12"

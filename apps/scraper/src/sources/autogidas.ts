@@ -8,7 +8,7 @@ import {
   type initialListingT,
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
-import { getVinFromRegitra } from ".";
+import { getVinFromRegitra, getVinFromRegitraApi } from ".";
 
 const log = logger.child({ source: "autogidas" });
 
@@ -350,7 +350,7 @@ async function scrapeDetails(
 
   let vin: string | undefined;
   if (autoParams.sdk) {
-    const sdkResult = await getVinFromRegitra(page, autoParams.sdk, 0);
+    const sdkResult = await getVinFromRegitraApi(autoParams.sdk);
     vin = sdkResult.vin;
     if (!sdkResult.isSdkValid) autoParams.sdk = undefined;
   }
