@@ -1,6 +1,6 @@
 import { env } from "../env";
 import { logError } from "./error";
-import { delay, logger } from "./helpers";
+import { delay } from "./helpers";
 import { taskCreated, taskRetrieved } from "./validators";
 
 export async function createCaptchaTask({

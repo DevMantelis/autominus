@@ -14,7 +14,7 @@ import {
   type initialListingT,
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
-import { getVinFromRegitra, getVinFromRegitraApi } from ".";
+import { getVinFromRegitraApi } from ".";
 import { logError } from "../error";
 
 const log = logger.child({ source: "autoplius" });

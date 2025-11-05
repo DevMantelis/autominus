@@ -8,7 +8,7 @@ import {
   type initialListingT,
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
-import { getVinFromRegitra, getVinFromRegitraApi } from ".";
+import { getVinFromRegitraApi } from ".";
 
 const log = logger.child({ source: "autogidas" });
 

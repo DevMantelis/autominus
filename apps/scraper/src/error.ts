@@ -3,6 +3,7 @@ import { logger } from "./helpers";
 
 export const logError = async (
   message: string,
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any,
   options: {
     sendToDiscord?: boolean;

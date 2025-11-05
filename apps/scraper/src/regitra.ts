@@ -1,4 +1,3 @@
-import type { Browser } from "@playwright/test";
 import PQueue from "p-queue";
 import { logError } from "./error";
 import type {
