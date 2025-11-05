@@ -138,15 +138,27 @@ export async function getVinFromRegitraApi(
         vin: data.vehicleVin,
       };
     } catch (error) {
-      await logError(
-        `Error from regitra insurance (Retry: ${retry}/2).`,
-        error,
-        {
-          sendToDiscord: true,
-        }
-      );
+      await logError(`Error from regitra vin (Retry: ${retry}/2).`, error, {
+        sendToDiscord: true,
+      });
       retry++;
     }
   }
   return { isSdkValid: true, vin: undefined };
 }
+
+export const isValidSDK = (sdk: string): boolean => {
+  let isValid = true;
+  if (!/^[AaCcEeFfHhKkMmNnPpRrTt]{8}$/.test(sdk)) {
+    isValid = false;
+  }
+  return isValid;
+};
+
+export const isValidVin = (vin: string): boolean => {
+  let isValid = true;
+  if (!/^[A-Za-z0-9]{17}$/.test(vin)) {
+    isValid = false;
+  }
+  return isValid;
+};

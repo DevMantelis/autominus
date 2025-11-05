@@ -31,8 +31,8 @@ export const regitraInsurance = z.object({
   trafficParticipationStatus: z.boolean(),
   trafficSuspenseDateUntil: z.string().nullable(),
   technicalInspectionValid: z.boolean(),
-  technicalInspectionValidFrom: z.string(),
-  technicalInspectionValidUntil: z.string(),
+  technicalInspectionValidFrom: z.string().nullable(),
+  technicalInspectionValidUntil: z.string().nullable(),
   civilInsuranceValid: z.boolean(),
   vehicleWanted: z.boolean(),
 });

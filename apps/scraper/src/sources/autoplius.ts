@@ -14,7 +14,7 @@ import {
   type initialListingT,
 } from "../types";
 import { insertAutoValidator } from "@repo/convex-db/convex/types";
-import { getVinFromRegitraApi } from ".";
+import { getVinFromRegitraApi, isValidSDK, isValidVin } from ".";
 import { logError } from "../error";
 
 const log = logger.child({ source: "autoplius" });
@@ -523,7 +523,7 @@ async function getSdk(page: Page) {
   const normalizedSDK = normalizeText(sdkCandidate.replace("SDK", ""));
   if (
     normalizedSDK &&
-    normalizedSDK.length === 8 &&
+    isValidSDK(normalizedSDK) &&
     !normalizedSDK.toLowerCase().includes("kodas")
   ) {
     return normalizedSDK;
@@ -554,11 +554,8 @@ async function getVinFromExternalPage(page: Page, url: string) {
       .locator(autoPatikraLocators.many_details_locator)
       .all();
     for (const detail of details) {
-      const detailText = normalizeText(await detail.textContent())?.replaceAll(
-        " ",
-        ""
-      );
-      if (detailText?.length === 17) return detailText;
+      const detailText = normalizeText(await detail.textContent());
+      if (detailText && isValidVin(detailText)) return detailText;
     }
   } catch (error) {
     await logError("Failed to fetch VIN from autoPatikra", error);

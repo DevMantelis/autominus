@@ -58,7 +58,8 @@ export default defineSchema({
       "technical_inspection_month",
     ])
     .index("by_external_id", ["id"]) // upsert lookups
-    .index("by_regitra_lookup", ["needs_regitra_lookup"]),
+    .index("by_regitra_lookup", ["needs_regitra_lookup"])
+    .index("by_vin", ["vin", "insurance"]),
   // Indexes for querying and upserting
 
   // Normalized images table

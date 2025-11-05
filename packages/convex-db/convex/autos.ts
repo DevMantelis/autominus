@@ -70,7 +70,10 @@ export const updateAutos = mutation({
     for (const auto of autos) {
       try {
         const { id, ...autoWithoutId } = auto;
-        await ctx.db.patch(auto.id, autoWithoutId);
+        await ctx.db.patch(auto.id, {
+          ...autoWithoutId,
+          updated_at: new Date().valueOf(),
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -91,7 +94,7 @@ export const updatePlates = mutation({
     plates: v.array(v.string()),
   }),
   handler: async (ctx, { id, plates }) => {
-    await ctx.db.patch(id, { plates });
+    await ctx.db.patch(id, { plates, updated_at: new Date().valueOf() });
   },
 });
 
@@ -142,7 +145,10 @@ export const updateFromRegitra = mutation({
       if (Object.keys(patchData).length === 0) {
         throw new Error("No fields provided to update");
       }
-      await ctx.db.patch(auto.id, patchData);
+      await ctx.db.patch(auto.id, {
+        ...patchData,
+        updated_at: new Date().valueOf(),
+      });
     }
   },
 });
