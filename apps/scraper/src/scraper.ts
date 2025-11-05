@@ -110,8 +110,8 @@ export class Scraper {
         listing.status !== existing.status
       ) {
         logger.info({
-          existing: existing,
           now: listing,
+          existing: existing,
           pushed: {
             id: existing.id,
             price: listing.price,
