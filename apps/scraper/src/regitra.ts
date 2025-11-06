@@ -4,7 +4,7 @@ import type {
   needsRegitraLookup,
   updateFromRegitra,
 } from "@repo/convex-db/convex/types";
-import { delay, logger, normalizeText } from "./helpers";
+import { delay, getTextContent, logger, normalizeText } from "./helpers";
 import { DB } from "./database";
 import { solveCaptcha } from "./captcha";
 import { regitraInsurance, regitraInsuranceError } from "./validators";
@@ -121,22 +121,25 @@ export class Regitra {
       `WEB lookup failed, trying API \n ${id}: ${plates.join(", ")}, ${vin}`
     );
     const result = await this.apiLookup({ plates, vin });
-    if (!result) {
-      this.toUpdate.push({ id, needs_regitra_lookup: false });
-      log.info(`API lookup failed ${id}: ${plates.join(", ")}, ${vin}`);
+    log.info(`API lookup was successful ${id}: ${plates.join(", ")}, ${vin}`);
+    if (result.end) {
+      this.toUpdate.push({
+        id,
+        plates: result.plates,
+        needs_regitra_lookup: false,
+      });
       return;
     }
-    log.info(`API lookup was successful ${id}: ${plates.join(", ")}, ${vin}`);
-    const date = dayjs(result.techDate);
+    const date = result.techDate ? dayjs(result.techDate) : undefined;
     this.toUpdate.push({
       id,
       needs_regitra_lookup: false,
       allowed_to_drive: result.allowedToDrive,
       insurance: result.insurance,
       plates: plates,
-      technical_inspection_day: date.date(),
-      technical_inspection_month: date.month() + 1,
-      technical_inspection_year: date.year(),
+      technical_inspection_day: date?.date(),
+      technical_inspection_month: date ? date.month() + 1 : undefined,
+      technical_inspection_year: date?.year(),
       wanted_by_police: result.wantedByPolice,
     });
   }
@@ -222,9 +225,9 @@ export class Regitra {
         }
       }
     } catch (error) {
-      const buffer = await page.screenshot({ fullPage: true });
+      // const buffer = await page.screenshot({ fullPage: true });
       await logError(
-        `Failed in regitra lookup: ${id}, ${vin}, ${plates.join(" ")}. Base64: ${buffer.toString("base64")}`,
+        `Failed in regitra lookup: ${id}, ${vin}, ${plates.join(" ")}.`,
         error,
         {
           sendToDiscord: true,
@@ -233,14 +236,36 @@ export class Regitra {
     } finally {
       await page.close();
     }
-    return { id, needs_regitra_lookup: false, success: false };
+    return {
+      id,
+      needs_regitra_lookup: false,
+      success: false,
+      plates: [],
+    };
   }
   async apiLookup({
     plates,
     vin,
   }: Omit<needsRegitraLookup[number], "vin" | "id"> & {
     vin: string;
-  }) {
+  }): Promise<
+    | {
+        vehicleMake: string;
+        vehicleModel: string;
+        statusInRegister:
+          | "Įregistruota"
+          | "Įregistruota (sustabdyta)"
+          | "Laikinai įregistruota"
+          | "Išregistruota";
+        allowedToDrive: boolean;
+        techDate: undefined | string;
+        insurance: boolean;
+        wantedByPolice: boolean;
+        plates: string[];
+        end: false;
+      }
+    | { end: true; plates: string[] }
+  > {
     for (const plate of plates) {
       for (let retry = 0; retry < 3; retry++) {
         const token = await solveCaptcha({
@@ -312,11 +337,12 @@ export class Regitra {
                   : "Išregistruota",
             allowedToDrive: data.trafficParticipationStatus,
             techDate: data.technicalInspectionValid
-              ? data.technicalInspectionValidUntil
+              ? data.technicalInspectionValidUntil!
               : undefined,
             insurance: data.civilInsuranceValid,
             wantedByPolice: data.vehicleWanted,
             plates: [plate],
+            end: false,
           };
         } catch (error) {
           await logError(
@@ -329,6 +355,9 @@ export class Regitra {
         }
       }
     }
-    return undefined;
+    return {
+      plates: [],
+      end: true,
+    };
   }
 }
