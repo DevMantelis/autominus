@@ -477,8 +477,15 @@ async function scrapeDetails(
   if (findVin) vin = await getVinFromExternalPage(page, findVin);
   if (!vin && autoParams.sdk) {
     const sdkResult = await getVinFromRegitra(page, autoParams.sdk);
-    vin = sdkResult.vin;
-    if (!sdkResult.isSdkValid) autoParams.sdk = undefined;
+
+    if (sdkResult.isSdkValid && !sdkResult.vin) {
+      const sdkResult2 = await getVinFromRegitraApi(autoParams.sdk);
+      vin = sdkResult2.vin;
+      if (!sdkResult2.isSdkValid) autoParams.sdk = undefined;
+    } else {
+      vin = sdkResult.vin;
+      if (!sdkResult.isSdkValid) autoParams.sdk = undefined;
+    }
   }
 
   const auto: insertAutoValidator = {
@@ -530,11 +537,7 @@ async function getSdk(page: Page) {
   if (!sdkCandidate) return undefined;
 
   const normalizedSDK = normalizeText(sdkCandidate.replace("SDK", ""));
-  if (
-    normalizedSDK &&
-    isValidSDK(normalizedSDK) &&
-    !normalizedSDK.toLowerCase().includes("kodas")
-  ) {
+  if (normalizedSDK && isValidSDK(normalizedSDK)) {
     return normalizedSDK;
   }
   return undefined;

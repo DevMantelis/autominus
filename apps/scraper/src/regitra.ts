@@ -108,28 +108,29 @@ export class Regitra {
     while (retry < 3) {
       const result = await this.lookUp({ id, plates, vin });
       const { success, ...everything } = result;
-      if (success || retry === 2) {
+      if (success) {
         this.toUpdate.push(everything);
         return;
       } else retry++;
     }
-    // const result = await this.apiLookup({ plates, vin });
-    // if (!result) {
-    //   this.toUpdate.push({ id, needs_regitra_lookup: false });
-    //   return;
-    // }
-    // const date = dayjs(result.techDate);
-    // this.toUpdate.push({
-    //   id,
-    //   needs_regitra_lookup: false,
-    //   allowed_to_drive: result.allowedToDrive,
-    //   insurance: result.insurance,
-    //   plates: plates,
-    //   technical_inspection_day: date.date(),
-    //   technical_inspection_month: date.month() + 1,
-    //   technical_inspection_year: date.year(),
-    //   wanted_by_police: result.wantedByPolice,
-    // });
+
+    const result = await this.apiLookup({ plates, vin });
+    if (!result) {
+      this.toUpdate.push({ id, needs_regitra_lookup: false });
+      return;
+    }
+    const date = dayjs(result.techDate);
+    this.toUpdate.push({
+      id,
+      needs_regitra_lookup: false,
+      allowed_to_drive: result.allowedToDrive,
+      insurance: result.insurance,
+      plates: plates,
+      technical_inspection_day: date.date(),
+      technical_inspection_month: date.month() + 1,
+      technical_inspection_year: date.year(),
+      wanted_by_police: result.wantedByPolice,
+    });
   }
   async lookUp({
     id,
