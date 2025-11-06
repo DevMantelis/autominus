@@ -88,7 +88,7 @@ export async function getVinFromRegitraApi(
       websiteURL:
         "https://www.eregitra.lt/services/vehicle-declaration/info-by-owner-declaration-code-search",
       websiteKey: "6LcQOk8cAAAAAMsa9rDuPic8nHpD_pFBGAUPvb7c",
-      minScore: 0.9,
+      minScore: 0.7,
       action: "vehicleSearchByOdCode",
     });
     try {

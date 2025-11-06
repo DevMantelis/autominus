@@ -242,8 +242,7 @@ export class Regitra {
     vin: string;
   }) {
     for (const plate of plates) {
-      let retry = 0;
-      while (retry < 3) {
+      for (let retry = 0; retry < 3; retry++) {
         const token = await solveCaptcha({
           type: "RecaptchaV3TaskProxyless",
           websiteURL:
@@ -284,8 +283,10 @@ export class Regitra {
           if (errorData.success) {
             if (
               errorData.data.message.toLowerCase().includes("vehicle not found")
-            )
+            ) {
+              retry = Infinity;
               continue;
+            }
             if (errorData.data.message.includes("INVALID_RECAPTCHA")) {
               throw new Error(
                 `Got invalid captcha to perform insurance check. Error: ${errorData.data.message}`
@@ -325,7 +326,6 @@ export class Regitra {
               sendToDiscord: true,
             }
           );
-          retry++;
         }
       }
     }
