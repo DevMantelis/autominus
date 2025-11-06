@@ -32,7 +32,7 @@ async function main() {
       sendToDiscord: true,
     });
   } finally {
-    // await browser.close();
+    await browser.close();
   }
 }
 
