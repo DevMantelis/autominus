@@ -111,7 +111,10 @@ export class Scraper {
         toUpdate.push({
           id: existing.id,
           price: listing.price,
-          price_old: existing.price,
+          price_old:
+            existing.price !== listing.price
+              ? existing.price
+              : existing.price_old,
           status: listing.status,
         });
       }
