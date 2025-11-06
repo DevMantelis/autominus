@@ -84,7 +84,8 @@ export class Regitra {
       this.add(async () => await this.initiateLookup({ id, vin, plates }));
     }
     await this.queue.onIdle();
-    // await this.context.close();
+    await this.context.close();
+    log.info("Regitra is done.");
     return this.toUpdate;
   }
   initializeQueue() {
@@ -104,21 +105,28 @@ export class Regitra {
   }: Omit<needsRegitraLookup[number], "vin"> & {
     vin: string;
   }) {
-    let retry = 0;
-    while (retry < 3) {
+    log.info(`Initiated lookup for ${id}: ${plates.join(", ")}, ${vin}`);
+    for (let i = 0; i <= 3; i++) {
       const result = await this.lookUp({ id, plates, vin });
       const { success, ...everything } = result;
       if (success) {
         this.toUpdate.push(everything);
+        log.info(
+          `WEB lookup was successful ${id}: ${plates.join(", ")}, ${vin}`
+        );
         return;
-      } else retry++;
+      }
     }
-
+    log.info(
+      `WEB lookup failed, trying API \n ${id}: ${plates.join(", ")}, ${vin}`
+    );
     const result = await this.apiLookup({ plates, vin });
     if (!result) {
       this.toUpdate.push({ id, needs_regitra_lookup: false });
+      log.info(`API lookup failed ${id}: ${plates.join(", ")}, ${vin}`);
       return;
     }
+    log.info(`API lookup was successful ${id}: ${plates.join(", ")}, ${vin}`);
     const date = dayjs(result.techDate);
     this.toUpdate.push({
       id,
@@ -241,7 +249,7 @@ export class Regitra {
           websiteURL:
             "https://www.eregitra.lt/services/vehicle-registration/data-search",
           websiteKey: "6LcQOk8cAAAAAMsa9rDuPic8nHpD_pFBGAUPvb7c",
-          minScore: 0.9,
+          minScore: 0.7,
           action: "vehicleRegistrationDataSearch",
         });
 

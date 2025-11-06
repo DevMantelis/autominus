@@ -242,7 +242,7 @@ async function parseListingPage(
   const listings = await page.locator(listingLocators.listings).all();
   log.info({ currentUrl, count: listings.length }, "Found potential listings");
   if (listings.length === 0) {
-    if (retry < 2) return parseListingPage(page, currentUrl, retry + 1);
+    if (retry <= 2) return parseListingPage(page, currentUrl, retry + 1);
     else {
       const buffer = await page.screenshot();
       throw new Error(

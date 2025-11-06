@@ -53,7 +53,7 @@ export async function createCaptchaTask({
     await logError("Failed to create 2captcha task", error, {
       sendToDiscord: true,
     });
-    if (retry < 3)
+    if (retry <= 3)
       return createCaptchaTask({
         type,
         websiteURL,
@@ -73,7 +73,7 @@ export async function retrieveCaptchaTask(
 ): Promise<string | undefined> {
   await delay(5000);
 
-  const waitForSeconds = 60;
+  const waitForSeconds = 90;
   for (let i = 0; i < waitForSeconds; i += 2) {
     try {
       const retrieveTask = await fetch(
