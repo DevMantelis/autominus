@@ -151,6 +151,7 @@ export class Regitra {
     vin: string;
   }): Promise<updateFromRegitra["autos"][number] & { success: boolean }> {
     const page = await this.context.newPage();
+    const removePlates: string[] = [];
     try {
       await page.goto(env.REGITRA_LOOKUP, {
         waitUntil: "load",
@@ -183,6 +184,8 @@ export class Regitra {
             .first()
             .waitFor({ state: "visible", timeout: 5000 });
         } catch {
+          const message = await getTextContent(page, "main .MuiAlert-message");
+          if (message?.includes("nerasta")) removePlates.push(plate);
           continue;
         }
         const tableRows = await page
@@ -240,7 +243,7 @@ export class Regitra {
       id,
       needs_regitra_lookup: false,
       success: false,
-      plates: [],
+      plates: plates.filter((plate) => !removePlates.includes(plate)),
     };
   }
   async apiLookup({
@@ -266,6 +269,7 @@ export class Regitra {
       }
     | { end: true; plates: string[] }
   > {
+    const removePlates: string[] = [];
     for (const plate of plates) {
       for (let retry = 0; retry < 3; retry++) {
         const token = await solveCaptcha({
@@ -309,6 +313,7 @@ export class Regitra {
             if (
               errorData.data.message.toLowerCase().includes("vehicle not found")
             ) {
+              removePlates.push(plate);
               retry = Infinity;
               continue;
             }
@@ -356,7 +361,7 @@ export class Regitra {
       }
     }
     return {
-      plates: [],
+      plates: plates.filter((plate) => !removePlates.includes(plate)),
       end: true,
     };
   }
