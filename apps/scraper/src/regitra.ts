@@ -109,7 +109,7 @@ export class Regitra {
     for (let i = 0; i <= 3; i++) {
       const result = await this.lookUp({ id, plates, vin });
       const { success, ...everything } = result;
-      if (success) {
+      if (success || everything.plates?.length === 0) {
         this.toUpdate.push(everything);
         log.info(
           `WEB lookup was successful ${id}: ${plates.join(", ")}, ${vin}`
