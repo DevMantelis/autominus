@@ -17,7 +17,7 @@ export function gatherSources(): ScraperSource[] {
 export async function getVinFromRegitra(
   page: Page,
   sdk: string,
-  retryCount: number
+  retryCount: number = 0
 ): Promise<{ isSdkValid: boolean; vin: string | undefined }> {
   if (sdk.length !== 8 || retryCount < 0)
     return { isSdkValid: false, vin: undefined };
