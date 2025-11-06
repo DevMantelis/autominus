@@ -11,7 +11,10 @@ export const logError = async (
     sendToDiscord: false,
   }
 ) => {
-  const errorMessage = error instanceof Error ? error.message : String(error);
+  const errorMessage =
+    error instanceof Error
+      ? `Message: ${error.message}.${!!error.cause && "\nCause: " + JSON.stringify(error.cause)}`
+      : String(error);
   logger.error(
     {
       error: errorMessage,

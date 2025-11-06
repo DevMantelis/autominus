@@ -74,7 +74,7 @@ export async function getVinFromRegitra(
     }
     await logError(errorMessage, error);
   }
-  if (retryCount < 3) return getVinFromRegitra(page, sdk, retryCount + 1);
+  if (retryCount <= 3) return getVinFromRegitra(page, sdk, retryCount + 1);
   return { isSdkValid: !errors.notFound && !errors.notValid, vin: undefined };
 }
 
@@ -138,9 +138,13 @@ export async function getVinFromRegitraApi(
         vin: data.vehicleVin,
       };
     } catch (error) {
-      await logError(`Error from regitra vin (Retry: ${retry}/2).`, error, {
-        sendToDiscord: true,
-      });
+      await logError(
+        `Error from regitra vin (Retry: ${retry}/2) - ${sdk}.`,
+        error,
+        {
+          sendToDiscord: true,
+        }
+      );
       retry++;
     }
   }
