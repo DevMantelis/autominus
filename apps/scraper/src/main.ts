@@ -24,9 +24,9 @@ async function main() {
       })
     );
 
-    const regitra = new Regitra(db);
-    const toUpdate = await regitra.start(browser);
-    if (toUpdate) await db.updateRegitraLookup(toUpdate);
+    // const regitra = new Regitra(db);
+    // const toUpdate = await regitra.start(browser);
+    // if (toUpdate) await db.updateRegitraLookup(toUpdate);
   } catch (error) {
     await logError("Failed in main", error, {
       sendToDiscord: true,
