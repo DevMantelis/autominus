@@ -12,6 +12,7 @@ import type * as actions from "../actions.js";
 import type * as autos from "../autos.js";
 import type * as triggers from "../triggers.js";
 import type * as types from "../types.js";
+import type * as webAutos from "../webAutos.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   autos: typeof autos;
   triggers: typeof triggers;
   types: typeof types;
+  webAutos: typeof webAutos;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

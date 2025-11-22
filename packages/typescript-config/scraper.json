@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "outDir": "../../apps/scraper/dist"
+  },
+  "include": [
+    "../../apps/scraper/env.ts",
+    "../../apps/scraper/src/**/*.ts",
+    "../../apps/scraper/tsup.config.ts"
+  ],
+  "exclude": ["../../apps/scraper/node_modules", "../../apps/scraper/dist"]
+}
