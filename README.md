@@ -1,135 +1,73 @@
-# Turborepo starter
+# Autominus
 
-This Turborepo starter is maintained by the Turborepo core team.
+Autominus is a modern car listings companion that blends a consumer-facing web experience with the tooling needed to source and enrich vehicle data. Everything runs from a single Turborepo so UI, scraping jobs, shared configs, and Convex data models evolve together.
 
-## Using this example
+> ⚠️ The website is under active development. Expect frequent changes as core features land.
 
-Run the following command:
+## Apps & Packages
+
+- `apps/web` – Next.js 16 + React 19 application that renders the public listings experience with HeroUI, Tailwind, and Convex for realtime data.
+- `apps/scraper` – Playwright/Node-based scraper that ingests source listings, normalizes them, and pushes structured records to Convex.
+- `packages/convex-db` – Shared Convex schema and server-side functions used by both apps.
+- `packages/eslint-config` / `packages/typescript-config` – Centralized linting and TypeScript settings that keep every project aligned.
+
+## Tech Stack
+
+- Turborepo + pnpm workspace for orchestration and caching.
+- Next.js 16, React 19, and HeroUI for the front-end.
+- Convex for realtime data storage and server functions.
+- Tailwind CSS 4 for styling, Framer Motion for motion, Lucide for icons.
+- Playwright + Puppeteer Extra for scraping, Day.js/Moment for time helpers.
+
+## Getting Started
+
+### Requirements
+
+- Node.js 18+
+- [pnpm](https://pnpm.io/) 9+
+- A Convex project + environment variables for both the web app and scraper (see `.env.example` files if available).
+
+### Install dependencies
 
 ```sh
-npx create-turbo@latest
+pnpm install
 ```
 
-## What's inside?
+### Run everything in development
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```sh
+pnpm dev
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+This starts the dev servers defined in each package via Turborepo.
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Build for production
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```sh
+pnpm build
 ```
 
-### Develop
+### Other useful scripts
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```sh
+pnpm lint
+pnpm check-types
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Run them from the repo root to lint or type-check every package concurrently.
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+## Roadmap
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+- Landing page polish with hero content, FAQs, and waitlist capture.
+- Listings improvements:
+  - Filters for make, price, mileage, body type, transmission, condition, and more.
+  - Sort controls for relevance, freshness, and price direction.
+  - Expandable listing details with full spec sheets and seller notes.
+  - Listing's photo carousel with lazy loading and keyboard navigation.
+- Authentication & bookmarks so signed-in users can save searches and individual cars.
+- Number plates search for reverse lookups when a photo or registration ID is all you have.
+- “Near me” listings using device geolocation plus distance-to-seller indicators.
 
-### Remote Caching
+## Contributing
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+Contributions are welcome while the project is in flux. Open an issue with your proposal or pick up a roadmap item, then submit a PR aligned with the shared ESLint and TypeScript configs. Continuous deployment is disabled until the core feature set above ships.
