@@ -23,6 +23,7 @@ export const autosTable = {
   technical_inspection_year: v.optional(v.number()),
   technical_inspection_month: v.optional(v.number()),
   technical_inspection_day: v.optional(v.number()),
+  technical_inspection_date: v.optional(v.number()),
   engine: v.optional(v.string()),
   doors: v.optional(v.string()),
   drive_wheels: v.optional(v.string()),

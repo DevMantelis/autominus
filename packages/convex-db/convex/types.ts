@@ -39,3 +39,23 @@ export type needsRegitraLookup = FunctionReturnType<
 export type updateFromRegitra = FunctionArgs<
   typeof api.autos.updateFromRegitra
 >;
+
+export type FiltersT = {
+  priceFrom: number;
+  priceTo: number;
+  technicalInspection: Array<"valid" | "invalid">;
+  technicalInspectionDate: Date | null;
+  insurance: boolean;
+  gearbox: Array<"automatic" | "mechanical">;
+  fuelType: Array<"petrol" | "diesel" | "gas">;
+};
+
+export const defaultFilter: FiltersT = {
+  priceFrom: 50,
+  priceTo: 2000,
+  technicalInspection: ["valid", "invalid"],
+  technicalInspectionDate: null,
+  insurance: false,
+  gearbox: ["automatic", "mechanical"],
+  fuelType: ["petrol", "diesel", "gas"],
+};

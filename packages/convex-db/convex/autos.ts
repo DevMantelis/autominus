@@ -122,9 +122,7 @@ export const updateFromRegitra = mutation({
         wanted_by_police: v.optional(v.boolean()),
         needs_regitra_lookup: v.boolean(),
         plates: v.optional(v.array(v.string())),
-        technical_inspection_year: v.optional(v.number()),
-        technical_inspection_month: v.optional(v.number()),
-        technical_inspection_day: v.optional(v.number()),
+        technical_inspection_date: v.optional(v.number()),
       })
     ),
   }),
@@ -137,9 +135,7 @@ export const updateFromRegitra = mutation({
           wanted_by_police: auto.wanted_by_police,
           needs_regitra_lookup: auto.needs_regitra_lookup,
           plates: auto.plates,
-          technical_inspection_year: auto.technical_inspection_year,
-          technical_inspection_month: auto.technical_inspection_month,
-          technical_inspection_day: auto.technical_inspection_day,
+          technical_inspection_date: auto.technical_inspection_date,
         }).filter(([_, v]) => v !== undefined)
       );
       if (Object.keys(patchData).length === 0) {
