@@ -8,10 +8,10 @@ import { delay, getTextContent, logger, normalizeText } from "./helpers";
 import { DB } from "./database";
 import { solveCaptcha } from "./captcha";
 import { regitraInsurance, regitraInsuranceError } from "./validators";
-import dayjs from "dayjs";
 import type { PlaywrightCookie } from "./types";
 import type { Browser, BrowserContext } from "@playwright/test";
 import { env } from "../env";
+import moment from "moment";
 
 const log = logger.child({ module: "Regitra" });
 
@@ -130,16 +130,16 @@ export class Regitra {
       });
       return;
     }
-    const date = result.techDate ? dayjs(result.techDate) : undefined;
+
     this.toUpdate.push({
       id,
       needs_regitra_lookup: false,
       allowed_to_drive: result.allowedToDrive,
       insurance: result.insurance,
       plates: plates,
-      technical_inspection_day: date?.date(),
-      technical_inspection_month: date ? date.month() + 1 : undefined,
-      technical_inspection_year: date?.year(),
+      technical_inspection_date: result.techDate
+        ? moment(result.techDate).valueOf()
+        : undefined,
       wanted_by_police: result.wantedByPolice,
     });
   }
@@ -207,9 +207,11 @@ export class Regitra {
             label === "Techninės apžiūros galiojimo pabaigos data".toLowerCase()
           ) {
             const splitted = value.split("-") as [string, string, string];
-            data.technical_inspection_year = Number(splitted.at(0));
-            data.technical_inspection_month = Number(splitted.at(1));
-            data.technical_inspection_day = Number(splitted.at(2));
+            data.technical_inspection_date = moment({
+              year: Number(splitted.at(0)),
+              month: Number(splitted.at(1)) - 1,
+              day: Number(splitted.at(2)),
+            }).valueOf();
           }
 
           if (label === "Draudimas".toLowerCase())
@@ -220,7 +222,7 @@ export class Regitra {
         }
         if (
           data.allowed_to_drive !== undefined ||
-          data.technical_inspection_year !== undefined ||
+          data.technical_inspection_date !== undefined ||
           data.insurance !== undefined ||
           data.wanted_by_police !== undefined
         ) {

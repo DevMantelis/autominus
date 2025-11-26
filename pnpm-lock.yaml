@@ -34,12 +34,12 @@ importers:
       convex-helpers:
         specifier: ^0.1.104
         version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)(zod@4.1.12)
-      dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       p-queue:
         specifier: ^9.0.0
         version: 9.0.0
@@ -95,18 +95,30 @@ importers:
       '@heroui/card':
         specifier: ^2.2.25
         version: 2.2.25(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@heroui/checkbox':
+        specifier: ^2.3.27
+        version: 2.3.27(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/chip':
         specifier: ^2.2.22
         version: 2.2.22(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@heroui/date-picker':
+        specifier: ^2.3.28
+        version: 2.3.28(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/divider':
         specifier: ^2.2.20
         version: 2.2.20(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@heroui/dropdown':
+        specifier: ^2.3.27
+        version: 2.3.27(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/image':
         specifier: ^2.2.17
         version: 2.2.17(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/link':
         specifier: ^2.2.23
         version: 2.2.23(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@heroui/modal':
+        specifier: ^2.2.24
+        version: 2.2.24(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/navbar':
         specifier: ^2.2.25
         version: 2.2.25(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -116,6 +128,9 @@ importers:
       '@heroui/react':
         specifier: ^2.8.5
         version: 2.8.5(@types/react@19.2.2)(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(tailwindcss@4.1.17)
+      '@heroui/select':
+        specifier: ^2.4.28
+        version: 2.4.28(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@heroui/skeleton':
         specifier: ^2.2.17
         version: 2.2.17(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -131,6 +146,9 @@ importers:
       '@heroui/tooltip':
         specifier: ^2.2.24
         version: 2.2.24(@heroui/system@2.4.23(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@heroui/theme@2.4.23(tailwindcss@4.1.17))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@internationalized/date':
+        specifier: ^3.10.0
+        version: 3.10.0
       '@repo/convex-db':
         specifier: workspace:*
         version: link:../../packages/convex-db
@@ -143,6 +161,9 @@ importers:
       framer-motion:
         specifier: ^12.23.24
         version: 12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lucide-react:
         specifier: ^0.553.0
         version: 0.553.0(react@19.2.0)
@@ -152,6 +173,9 @@ importers:
       next:
         specifier: 16.0.1
         version: 16.0.1(@babel/core@7.28.5)(@playwright/test@1.56.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      nuqs:
+        specifier: ^2.8.1
+        version: 2.8.1(next@16.0.1(@babel/core@7.28.5)(@playwright/test@1.56.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       react:
         specifier: 19.2.0
         version: 19.2.0
@@ -171,6 +195,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.1.17
         version: 4.1.17
+      '@types/lodash':
+        specifier: ^4.17.21
+        version: 4.17.21
       '@types/node':
         specifier: ^20.19.24
         version: 20.19.24
@@ -215,23 +242,26 @@ importers:
     dependencies:
       '@t3-oss/env-core':
         specifier: ^0.13.8
-        version: 0.13.8(typescript@5.9.3)(zod@4.1.12)
+        version: 0.13.8(typescript@5.9.3)(zod@4.1.13)
       convex:
-        specifier: ^1.28.2
-        version: 1.28.2(react@19.2.0)
+        specifier: ^1.29.3
+        version: 1.29.3(react@19.2.0)
       convex-helpers:
-        specifier: ^0.1.104
-        version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(zod@4.1.12)
+        specifier: ^0.1.106
+        version: 0.1.106(@standard-schema/spec@1.0.0)(convex@1.29.3(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(zod@4.1.13)
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       zod:
-        specifier: ^4.1.12
-        version: 4.1.12
+        specifier: ^4.1.13
+        version: 4.1.13
     devDependencies:
       '@types/node':
-        specifier: ^24.9.2
-        version: 24.9.2
+        specifier: ^24.10.1
+        version: 24.10.1
 
   packages/eslint-config:
     devDependencies:
@@ -2181,6 +2211,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/lodash@4.17.21':
+    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
+
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
@@ -2190,8 +2223,8 @@ packages:
   '@types/node@22.19.0':
     resolution: {integrity: sha512-xpr/lmLPQEj+TUnHmR+Ab91/glhJvsqcjB+yY0Ix9GO70H6Lb4FHH5GeqdOE5btAx7eIMwuHkp4H2MSkLcqWbA==}
 
-  '@types/node@24.9.2':
-    resolution: {integrity: sha512-uWN8YqxXxqFMX2RqGOrumsKeti4LlmIMIyV0lgut4jx7KQBcBiW6vkDtIBvHnHIquwNfJhk8v2OtmO8zXWHfPA==}
+  '@types/node@24.10.1':
+    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
   '@types/react-dom@19.2.2':
     resolution: {integrity: sha512-9KQPoO6mZCi7jcIStSnlOWn2nEF3mNmyr3rIAsGnAbQKYbRLyqmeSc39EVgtxXVia+LMT8j3knZLAZAh+xLmrw==}
@@ -2650,6 +2683,28 @@ packages:
       zod:
         optional: true
 
+  convex-helpers@0.1.106:
+    resolution: {integrity: sha512-hWRe3yDaAVHMe4CUYw1YoQLiPZ1KIx6Kbf0w6UcRDx1BXpJgMCl3GVIMiSeYiA0PkbwjnIwGWIvoUVKloG5Tyw==}
+    hasBin: true
+    peerDependencies:
+      '@standard-schema/spec': ^1.0.0
+      convex: ^1.25.4
+      hono: ^4.0.5
+      react: ^17.0.2 || ^18.0.0 || ^19.0.0
+      typescript: ^5.5
+      zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      '@standard-schema/spec':
+        optional: true
+      hono:
+        optional: true
+      react:
+        optional: true
+      typescript:
+        optional: true
+      zod:
+        optional: true
+
   convex@1.28.0:
     resolution: {integrity: sha512-40FgeJ/LxP9TxnkDDztU/A5gcGTdq1klcTT5mM0Ak+kSlQiDktMpjNX1TfkWLxXaE3lI4qvawKH95v2RiYgFxA==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
@@ -2666,8 +2721,8 @@ packages:
       react:
         optional: true
 
-  convex@1.28.2:
-    resolution: {integrity: sha512-KzNsLbcVXb1OhpVQ+vHMgu+hjrsQ1ks5BZwJ2lR8O+nfbeJXE6tHbvsg1H17+ooUDvIDBSMT3vXS+AlodDhTnQ==}
+  convex@1.29.1:
+    resolution: {integrity: sha512-0+1/0QjOKJw5pk480HVMfhSKjYOM5dM67Ql5yF6FzrC/09WCXm5UVWd/MU8/OCB0YRgFUhrRsrWFSnW0w7iBSA==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -2682,8 +2737,8 @@ packages:
       react:
         optional: true
 
-  convex@1.29.1:
-    resolution: {integrity: sha512-0+1/0QjOKJw5pk480HVMfhSKjYOM5dM67Ql5yF6FzrC/09WCXm5UVWd/MU8/OCB0YRgFUhrRsrWFSnW0w7iBSA==}
+  convex@1.29.3:
+    resolution: {integrity: sha512-tg5TXzMjpNk9m50YRtdp6US+t7ckxE4E+7DNKUCjJ2MupQs2RBSPF/z5SNN4GUmQLSfg0eMILDySzdAvjTrhnw==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -2722,9 +2777,6 @@ packages:
 
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
-
-  dayjs@1.11.19:
-    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -3569,6 +3621,9 @@ packages:
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
 
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
 
@@ -3674,6 +3729,27 @@ packages:
 
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
+
+  nuqs@2.8.1:
+    resolution: {integrity: sha512-kIw8UW5KXXfVla6B9h0EKzSH/YDpee6lojniQoMyul8wq9brwV0kElE2Jzg4NSCLBo7n2E3wc1J3o7IyPYVlqQ==}
+    peerDependencies:
+      '@remix-run/react': '>=2'
+      '@tanstack/react-router': ^1
+      next: '>=14.2.0'
+      react: '>=18.2.0 || ^19.0.0-0'
+      react-router: ^5 || ^6 || ^7
+      react-router-dom: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@tanstack/react-router':
+        optional: true
+      next:
+        optional: true
+      react-router:
+        optional: true
+      react-router-dom:
+        optional: true
 
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -4471,6 +4547,9 @@ packages:
 
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
 snapshots:
 
@@ -6903,8 +6982,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@standard-schema/spec@1.0.0':
-    optional: true
+  '@standard-schema/spec@1.0.0': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
@@ -6923,6 +7001,11 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
       zod: 4.1.12
+
+  '@t3-oss/env-core@0.13.8(typescript@5.9.3)(zod@4.1.13)':
+    optionalDependencies:
+      typescript: 5.9.3
+      zod: 4.1.13
 
   '@t3-oss/env-nextjs@0.13.8(typescript@5.9.3)(zod@4.1.12)':
     dependencies:
@@ -7023,6 +7106,8 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/lodash@4.17.21': {}
+
   '@types/ms@2.1.0': {}
 
   '@types/node@20.19.24':
@@ -7033,7 +7118,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.9.2':
+  '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
 
@@ -7604,14 +7689,14 @@ snapshots:
       typescript: 5.9.2
       zod: 4.1.12
 
-  convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(zod@4.1.12):
+  convex-helpers@0.1.106(@standard-schema/spec@1.0.0)(convex@1.29.3(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(zod@4.1.13):
     dependencies:
-      convex: 1.28.2(react@19.2.0)
+      convex: 1.29.3(react@19.2.0)
     optionalDependencies:
       '@standard-schema/spec': 1.0.0
       react: 19.2.0
       typescript: 5.9.3
-      zod: 4.1.12
+      zod: 4.1.13
 
   convex@1.28.0(react@19.2.0):
     dependencies:
@@ -7620,14 +7705,14 @@ snapshots:
     optionalDependencies:
       react: 19.2.0
 
-  convex@1.28.2(react@19.2.0):
+  convex@1.29.1(react@19.2.0):
     dependencies:
       esbuild: 0.25.4
       prettier: 3.6.2
     optionalDependencies:
       react: 19.2.0
 
-  convex@1.29.1(react@19.2.0):
+  convex@1.29.3(react@19.2.0):
     dependencies:
       esbuild: 0.25.4
       prettier: 3.6.2
@@ -7663,8 +7748,6 @@ snapshots:
       is-data-view: 1.0.2
 
   dateformat@4.6.3: {}
-
-  dayjs@1.11.19: {}
 
   debug@3.2.7:
     dependencies:
@@ -8078,8 +8161,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.34.0(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.1.12
-      zod-validation-error: 4.0.2(zod@4.1.12)
+      zod: 4.1.13
+      zod-validation-error: 4.0.2(zod@4.1.13)
     transitivePeerDependencies:
       - supports-color
 
@@ -8089,8 +8172,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.39.1(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.1.12
-      zod-validation-error: 4.0.2(zod@4.1.12)
+      zod: 4.1.13
+      zod-validation-error: 4.0.2(zod@4.1.13)
     transitivePeerDependencies:
       - supports-color
 
@@ -8781,6 +8864,8 @@ snapshots:
 
   lodash.sortby@4.7.0: {}
 
+  lodash@4.17.21: {}
+
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -8886,6 +8971,13 @@ snapshots:
       - babel-plugin-macros
 
   node-releases@2.0.27: {}
+
+  nuqs@2.8.1(next@16.0.1(@babel/core@7.28.5)(@playwright/test@1.56.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      react: 19.2.0
+    optionalDependencies:
+      next: 16.0.1(@babel/core@7.28.5)(@playwright/test@1.56.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
   object-assign@4.1.1: {}
 
@@ -9839,8 +9931,10 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-validation-error@4.0.2(zod@4.1.12):
+  zod-validation-error@4.0.2(zod@4.1.13):
     dependencies:
-      zod: 4.1.12
+      zod: 4.1.13
 
   zod@4.1.12: {}
+
+  zod@4.1.13: {}

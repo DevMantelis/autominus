@@ -21,6 +21,7 @@ import {
   isValidVin,
 } from ".";
 import { logError } from "../error";
+import moment from "moment";
 
 const log = logger.child({ source: "autoplius" });
 
@@ -346,8 +347,7 @@ async function scrapeDetails(
     | "mass"
     | "seats"
     | "defects"
-    | "technical_inspection_year"
-    | "technical_inspection_month"
+    | "technical_inspection_date"
     | "co2_emission"
     | "emission_tax"
     | "sdk"
@@ -419,10 +419,16 @@ async function scrapeDetails(
           Number(splitted.at(0)).toString().length !== 4
         )
           break;
-        autoParams.technical_inspection_year = Number(splitted.at(0));
-        autoParams.technical_inspection_month = isFinite(Number(splitted.at(1)))
-          ? Number(splitted.at(1))
-          : 1;
+        const year = Number(splitted.at(0));
+        const month = isFinite(Number(splitted.at(1)))
+          ? Number(splitted.at(1)) - 1
+          : 0;
+
+        autoParams.technical_inspection_date = moment({
+          year,
+          month,
+          day: 1,
+        }).valueOf();
 
         break;
       }
