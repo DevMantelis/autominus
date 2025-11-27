@@ -398,6 +398,7 @@ async function scrapeDetails(
           autoParams.fuel_type.push("Gas");
         if (value.toLowerCase().includes("elektra"))
           autoParams.fuel_type.push("Electric");
+        if (autoParams.fuel_type.length === 0) autoParams.fuel_type = undefined;
         break;
       case paramsDescription.body_type:
         autoParams.body_type = value;

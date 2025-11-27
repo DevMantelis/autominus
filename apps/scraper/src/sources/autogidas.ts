@@ -390,7 +390,7 @@ async function scrapeDetails(
     mileage,
     first_registration_year: registration?.first_registration_year,
     first_registration_month: registration?.first_registration_month,
-    fuel_type: fuel,
+    fuel_type: fuel.length === 0 ? undefined : fuel,
     gearbox,
     engine,
     number,
