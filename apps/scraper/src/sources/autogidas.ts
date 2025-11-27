@@ -159,8 +159,6 @@ const detailLocators = {
   engine: ".view-main-info > .params > .param-engine > div > b",
   location_user: ".user-location",
   location_listing: ".sticky-location",
-  // vin: ".check-vin",
-  // vin_father: '#checkVin[data-checked="true"]',
 } as const;
 
 function buildSeedUrl(): string {
