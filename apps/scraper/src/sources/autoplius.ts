@@ -13,7 +13,10 @@ import {
   type ScraperSource,
   type initialListingT,
 } from "../types";
-import { insertAutoValidator } from "@repo/convex-db/convex/types";
+import {
+  insertAutoValidator,
+  type fuelType,
+} from "@repo/convex-db/convex/types";
 import {
   getVinFromRegitra,
   getVinFromRegitraApi,
@@ -389,7 +392,15 @@ async function scrapeDetails(
         autoParams.drive_wheels = value;
         break;
       case paramsDescription.fuel_type:
-        autoParams.fuel_type = value;
+        autoParams.fuel_type = [];
+        if (value.toLowerCase().includes("benzinas"))
+          autoParams.fuel_type.push("Petrol");
+        if (value.toLowerCase().includes("dyzelis"))
+          autoParams.fuel_type.push("Diesel");
+        if (value.toLowerCase().includes("dujos"))
+          autoParams.fuel_type.push("Gas");
+        if (value.toLowerCase().includes("elektra"))
+          autoParams.fuel_type.push("Electric");
         break;
       case paramsDescription.body_type:
         autoParams.body_type = value;

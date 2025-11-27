@@ -7,7 +7,10 @@ import {
   type ScraperSource,
   type initialListingT,
 } from "../types";
-import { insertAutoValidator } from "@repo/convex-db/convex/types";
+import {
+  insertAutoValidator,
+  type fuelType,
+} from "@repo/convex-db/convex/types";
 import { getVinFromRegitra, getVinFromRegitraApi, isValidSDK } from ".";
 import moment from "moment";
 
@@ -372,6 +375,12 @@ async function scrapeDetails(
     }
   }
 
+  const fuel: NonNullable<fuelType["fuel_type"]> = [];
+  if (fuel_type?.toLowerCase().includes("benzinas")) fuel.push("Petrol");
+  else if (fuel_type?.toLowerCase().includes("dyzelis")) fuel.push("Diesel");
+  else if (fuel_type?.toLowerCase().includes("dujos")) fuel.push("Gas");
+  else if (fuel_type?.toLowerCase().includes("elektra")) fuel.push("Electric");
+
   const auto: insertAutoValidator = {
     id: listing.id,
     url: listing.url,
@@ -383,7 +392,7 @@ async function scrapeDetails(
     mileage,
     first_registration_year: registration?.first_registration_year,
     first_registration_month: registration?.first_registration_month,
-    fuel_type,
+    fuel_type: fuel,
     gearbox,
     engine,
     number,
