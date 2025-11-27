@@ -59,3 +59,6 @@ export const defaultFilter: FiltersT = {
   gearbox: ["automatic", "mechanical"],
   fuelType: ["petrol", "diesel", "gas"],
 };
+
+const fuelType = insertAutoValidator.pick("fuel_type");
+export type fuelType = Infer<typeof fuelType>;

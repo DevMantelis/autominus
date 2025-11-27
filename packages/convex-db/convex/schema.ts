@@ -32,7 +32,16 @@ export const autosTable = {
   defects: v.optional(v.string()),
   mass: v.optional(v.string()),
   seats: v.optional(v.string()),
-  fuel_type: v.optional(v.string()),
+  fuel_type: v.optional(
+    v.array(
+      v.union(
+        v.literal("Gas"),
+        v.literal("Diesel"),
+        v.literal("Petrol"),
+        v.literal("Electric")
+      )
+    )
+  ),
   location: v.optional(v.string()),
   vin: v.optional(v.string()),
   sdk: v.optional(v.string()),
@@ -53,6 +62,8 @@ export const autosTable = {
 
 export default defineSchema({
   autos: defineTable(autosTable)
+    .index("by_price", ["price"])
+    .index("by_technical_inspection_date", ["technical_inspection_date"])
     .index("by_updated_at", ["updated_at"])
     .index("by_technical_inspection", [
       "technical_inspection_year",
@@ -60,7 +71,14 @@ export default defineSchema({
     ])
     .index("by_external_id", ["id"]) // upsert lookups
     .index("by_regitra_lookup", ["needs_regitra_lookup"])
-    .index("by_vin", ["vin", "insurance"]),
+    .index("by_vin", ["vin", "insurance"])
+    .index("by_filtering", [
+      "price",
+      "technical_inspection_date",
+      "insurance",
+      "gearbox",
+      "fuel_type",
+    ]),
   // Indexes for querying and upserting
 
   // Normalized images table
