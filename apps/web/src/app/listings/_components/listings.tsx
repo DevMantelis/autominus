@@ -3,6 +3,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
+import { Skeleton } from "@heroui/skeleton";
 import { cn } from "@heroui/theme";
 import { api } from "@repo/convex-db/convex/_generated/api";
 import { usePaginatedQuery } from "convex/react";
@@ -18,39 +19,87 @@ import {
   ShieldCheckIcon,
 } from "lucide-react";
 import moment from "moment";
+import { useQueryStates } from "nuqs";
+import { filtersSearchParams } from "./filters-search-params";
 
-export function Listings() {
-  const paginatedListings = usePaginatedQuery(
-    api.webAutos.listings,
-    {},
-    { initialNumItems: 20 }
-  );
+export const ListingsSkeleton = () => {
   return (
     <div className="grid gap-10 p-4 col-span-8 lg:col-span-6">
+      {Array.from({ length: 5 }, (i, x) => {
+        return (
+          <Card
+            key={x}
+            className="border-none bg-background/60 dark:bg-default-100/50 max-w-4xl w-full mx-auto"
+          >
+            <CardBody>
+              <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+                <div className="relative col-span-6 md:col-span-4 flex justify-center">
+                  <Skeleton className="w-[400px] h-[200px] rounded-xl" />
+                </div>
+                <div className="flex flex-col col-span-6 md:col-span-8">
+                  <div className="flex flex-col gap-2">
+                    <Skeleton className="w-48 h-5 rounded-xl" />
+                    <Skeleton className="w-24 h-5 rounded-xl" />
+                    <Skeleton className="w-16 h-5 rounded-xl" />
+                    <div className="grid gap-2 grid-cols-2 mt-3 md:grid-cols-4">
+                      {Array.from({ length: 8 }, (i, x) => {
+                        return (
+                          <Skeleton key={x} className="w-4/5 h-12 rounded-xl" />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
+
+export function Listings() {
+  const [params] = useQueryStates(filtersSearchParams);
+  const paginatedListings = usePaginatedQuery(
+    api.webAutos.listings,
+    {
+      ...params,
+      technicalInspectionDate: params.technicalInspectionDate
+        ? params.technicalInspectionDate.toISOString().split("T").at(0)!
+        : null,
+    },
+    { initialNumItems: 20 }
+  );
+
+  if (
+    paginatedListings.isLoading &&
+    paginatedListings.status === "LoadingFirstPage"
+  )
+    return <ListingsSkeleton />;
+
+  return (
+    <div className="grid gap-10 col-span-8 lg:col-span-6">
       {paginatedListings.results.map((listing) => {
-        const techDate = listing.technical_inspection_year
-          ? moment({
-              year: listing.technical_inspection_year,
-              month: listing.technical_inspection_month,
-              day: listing.technical_inspection_day,
-            })
+        const techDate = listing.technical_inspection_date
+          ? moment(listing.technical_inspection_date)
           : undefined;
         return (
           <Card
             isBlurred
-            className="border-none bg-background/60 dark:bg-default-100/50 max-w-4xl w-full mx-auto"
+            className="border-none bg-background/60 dark:bg-default-100/50"
             shadow="sm"
             key={listing.id}
           >
             <CardBody>
-              <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+              <div className="grid grid-cols-6 items-center justify-center md:grid-cols-12 gap-6 md:gap-4">
                 <div className="relative col-span-6 md:col-span-4 flex justify-center">
                   {listing.images.length > 0 ? (
                     <Image
                       alt="Album cover"
                       className="object-cover"
                       height={200}
-                      width={280}
+                      width={400}
                       shadow="md"
                       fetchPriority="high"
                       src={listing.images.at(0)}
@@ -114,7 +163,12 @@ export function Listings() {
                         >
                           Technical Inspection
                         </p>
-                        <p>
+                        <p
+                          className={cn("", {
+                            "text-default font-semibold":
+                              techDate === undefined,
+                          })}
+                        >
                           {techDate ? techDate.format("YYYY-MM-DD") : "Invalid"}
                         </p>
                       </div>
@@ -144,12 +198,18 @@ export function Listings() {
                         <p
                           className={cn("text-primary-700 truncate", {
                             "text-warning-700": listing.insurance === false,
-                            "text-default": listing.insurance === undefined,
+                            "text-default font-bold":
+                              listing.insurance === undefined,
                           })}
                         >
                           Insurance
                         </p>
-                        <p>
+                        <p
+                          className={cn("", {
+                            "text-default font-semibold":
+                              listing.insurance === undefined,
+                          })}
+                        >
                           {listing.insurance === true
                             ? "Valid"
                             : listing.insurance === false
@@ -171,13 +231,18 @@ export function Listings() {
                           className={cn("text-primary-700 truncate", {
                             "text-warning-700":
                               listing.allowed_to_drive === false,
-                            "text-default":
+                            "text-default font-bold":
                               listing.allowed_to_drive === undefined,
                           })}
                         >
                           Allowed To Drive
                         </p>
-                        <p>
+                        <p
+                          className={cn("", {
+                            "text-default font-semibold":
+                              listing.allowed_to_drive === undefined,
+                          })}
+                        >
                           {listing.allowed_to_drive === true
                             ? "Valid"
                             : listing.allowed_to_drive === false
@@ -225,7 +290,11 @@ export function Listings() {
                       <Settings2Icon className="text-primary shrink-0" />
                       <div className="min-w-0">
                         <p className="text-primary-700 truncate">Fuel Type</p>
-                        <p>{listing.fuel_type}</p>
+                        <p>
+                          {listing.fuel_type
+                            ? listing.fuel_type.join(", ")
+                            : "Unknown"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -239,6 +308,8 @@ export function Listings() {
           </Card>
         );
       })}
+      {paginatedListings.isLoading &&
+        paginatedListings.status === "LoadingMore" && <ListingsSkeleton />}
     </div>
   );
 }

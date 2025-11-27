@@ -32,7 +32,7 @@ export default function Header() {
   return (
     <Navbar
       classNames={{
-        base: cn("border-default-100 border-b mb-10", {
+        base: cn("border-default-100 border-b", {
           "bg-default-200/50 dark:bg-default-100/50": isMenuOpen,
         }),
         wrapper: "w-full justify-center",
@@ -46,7 +46,7 @@ export default function Header() {
       <NavbarMenuToggle className="text-default-400 md:hidden" />
 
       <NavbarMenu className="bg-default-200/50 shadow-medium dark:bg-default-100/50 top-[calc(var(--navbar-height)-1px)] max-h-fit pt-6 pb-6 backdrop-blur-md backdrop-saturate-150">
-        <NavbarMenuItem>
+        {/* <NavbarMenuItem>
           <Button fullWidth as={Link} href="/#" variant="faded">
             Sign In
           </Button>
@@ -60,13 +60,22 @@ export default function Header() {
           >
             Get Started
           </Button>
-        </NavbarMenuItem>
+        </NavbarMenuItem> */}
         {MenuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item.href}-${index}`}>
+          <NavbarMenuItem
+            key={`${item.href}-${index}`}
+            isActive={isActive(item.href)}
+          >
             <Link
-              className="text-default-500 mb-2 w-full"
               href={item.href}
               size="md"
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className={cn(
+                "text-foreground hover:underline hover:underline-offset-4",
+                {
+                  "font-bold text-primary": isActive(item.href),
+                }
+              )}
             >
               {item.text}
             </Link>
@@ -75,9 +84,6 @@ export default function Header() {
         ))}
       </NavbarMenu>
       <NavbarBrand>
-        {/* <div className=" p-1.5 rounded-full">
-          <CarIcon size={34} />
-        </div> */}
         <span className="text-large ml-2 font-medium">AUTOMINUS</span>
         <Chip
           size="sm"
@@ -117,14 +123,14 @@ export default function Header() {
       {/* Right Content */}
       <NavbarContent className="flex" justify="end">
         <NavbarItem className="ml-2 flex gap-2">
-          <Button
+          {/* <Button
             className="font-medium"
             color="primary"
             radius="md"
             variant="shadow"
           >
             Login
-          </Button>
+          </Button> */}
         </NavbarItem>
       </NavbarContent>
     </Navbar>

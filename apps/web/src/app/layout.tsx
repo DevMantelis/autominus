@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/system";
-import Header from "./components/header/Header";
-import { ConvexClientProvider } from "./providers/ConvexClientProvider";
+import Header from "../components/header/header";
+import { ConvexClientProvider } from "../providers/ConvexClientProvider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "../fonts/GeistVF.woff",
   variable: "--font-geist-sans",
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "../fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
 });
 
@@ -31,8 +32,10 @@ export default function RootLayout({
       >
         <HeroUIProvider>
           <ConvexClientProvider>
-            <Header />
-            {children}
+            <NuqsAdapter>
+              <Header />
+              {children}
+            </NuqsAdapter>
           </ConvexClientProvider>
         </HeroUIProvider>
       </body>
