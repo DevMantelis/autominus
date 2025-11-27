@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/system";
-import Header from "../components/header/header";
+import Header from "../components/header";
 import { ConvexClientProvider } from "../providers/ConvexClientProvider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
