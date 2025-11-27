@@ -13,10 +13,7 @@ import {
   type ScraperSource,
   type initialListingT,
 } from "../types";
-import {
-  insertAutoValidator,
-  type fuelType,
-} from "@repo/convex-db/convex/types";
+import { insertAutoValidator } from "@repo/convex-db/convex/types";
 import {
   getVinFromRegitra,
   getVinFromRegitraApi,
