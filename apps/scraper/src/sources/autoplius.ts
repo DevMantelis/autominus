@@ -392,7 +392,7 @@ async function scrapeDetails(
         autoParams.fuel_type = [];
         if (value.toLowerCase().includes("benzinas"))
           autoParams.fuel_type.push("Petrol");
-        if (value.toLowerCase().includes("dyzelis"))
+        if (value.toLowerCase().includes("dyzelinas"))
           autoParams.fuel_type.push("Diesel");
         if (value.toLowerCase().includes("dujos"))
           autoParams.fuel_type.push("Gas");

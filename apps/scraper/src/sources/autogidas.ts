@@ -375,9 +375,9 @@ async function scrapeDetails(
 
   const fuel: NonNullable<fuelType["fuel_type"]> = [];
   if (fuel_type?.toLowerCase().includes("benzinas")) fuel.push("Petrol");
-  else if (fuel_type?.toLowerCase().includes("dyzelis")) fuel.push("Diesel");
-  else if (fuel_type?.toLowerCase().includes("dujos")) fuel.push("Gas");
-  else if (fuel_type?.toLowerCase().includes("elektra")) fuel.push("Electric");
+  if (fuel_type?.toLowerCase().includes("dyzelinas")) fuel.push("Diesel");
+  if (fuel_type?.toLowerCase().includes("dujos")) fuel.push("Gas");
+  if (fuel_type?.toLowerCase().includes("elektra")) fuel.push("Electric");
 
   const auto: insertAutoValidator = {
     id: listing.id,
