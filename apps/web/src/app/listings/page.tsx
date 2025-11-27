@@ -3,8 +3,6 @@ import { Listings, ListingsSkeleton } from "./_components/listings";
 import ListingsStats from "./_components/listingsStats";
 import Sort from "./_components/sort";
 import { Suspense } from "react";
-import { Button } from "@heroui/button";
-import { ArrowDownWideNarrowIcon } from "lucide-react";
 import { Skeleton } from "@heroui/skeleton";
 
 export default async function Page() {
