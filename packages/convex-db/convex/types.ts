@@ -60,5 +60,4 @@ export const defaultFilter: FiltersT = {
   fuelType: ["petrol", "diesel", "gas"],
 };
 
-const fuelType = insertAutoValidator.pick("fuel_type");
-export type fuelType = Infer<typeof fuelType>;
+export type fuelType = Pick<insertAutoValidator, "fuel_type">;
